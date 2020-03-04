@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">proyectoFinalAndroid</string>
+    <string name="label_loading">Loading</string>
+    <string name="name">Name</string>
+    <string name="mail">Mail</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="signup">SignUp</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="signin">SignIn</string>
+    <string name="logo">Logo</string>
 </resources>

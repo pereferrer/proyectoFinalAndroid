@@ -21,7 +21,7 @@ android {
         buildConfigField 'String', 'DiscourseApiKey', DiscourseApiKey
         buildConfigField 'String', 'DiscourseAdmin', DiscourseAdmin
 
-        
+
     }
     buildTypes {
         release {
@@ -45,6 +45,8 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidxcardview_version"
     // Room
     implementation "androidx.room:room-runtime:$androidxroom_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     kapt "androidx.room:room-compiler:$androidxroom_version"
     // Volley
     implementation "com.android.volley:volley:$volley_version"
