@@ -34,50 +34,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/name"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/editTextRegisterMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/mail"
-            android:inputType="textEmailAddress"
-            android:autofillHints="" />
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/editTextRegisterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/password"
-            android:inputType="textPassword"
-            android:autofillHints="" />
+            android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/editTextRegisterUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/username"
-            android:inputType="textPersonName"
-            android:autofillHints="" />
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/buttonRegisterSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorWhite"
             android:text="@string/signup"
             android:textColor="@color/colorAccent"
             android:textSize="18sp"
@@ -105,7 +105,7 @@
             android:id="@+id/buttonRegisterSignIn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorWhite"
             android:text="@string/signin"
             android:textAllCaps="false"
             android:textColor="@color/colorAccent" />

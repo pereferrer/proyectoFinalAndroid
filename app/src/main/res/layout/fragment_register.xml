@@ -34,52 +34,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/name"
             android:inputType="textPersonName"
-            android:autofillHints="" tools:targetApi="o"/>
+            tools:targetApi="o" />
 
         <EditText
             android:id="@+id/editTextRegisterMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/mail"
             android:inputType="textEmailAddress"
-            android:autofillHints="" tools:targetApi="o"/>
+            tools:targetApi="o" />
 
         <EditText
             android:id="@+id/editTextRegisterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:autofillHints="" tools:targetApi="o"/>
+            tools:targetApi="o" />
 
         <EditText
             android:id="@+id/editTextRegisterUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:background="@color/colorPrimaryDark"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
             android:ems="10"
             android:hint="@string/username"
             android:inputType="textPersonName"
-            android:autofillHints="" tools:targetApi="o"/>
+            tools:targetApi="o" />
 
         <Button
             android:id="@+id/buttonRegisterSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorWhite"
             android:text="@string/signup"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -105,10 +109,10 @@
             android:id="@+id/buttonRegisterSignIn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorWhite"
             android:text="@string/signin"
             android:textAllCaps="false"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>
 
 </FrameLayout>

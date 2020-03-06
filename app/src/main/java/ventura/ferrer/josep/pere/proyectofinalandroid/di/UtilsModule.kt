@@ -52,7 +52,7 @@ fun provideOkHttpClient(sp: SharedPreferences): OkHttpClient {
 
             val updatedRequest = original.newBuilder()
                 .header("Api-Key", BuildConfig.DiscourseApiKey)
-                .header("Api-Username", sp.getString(PREFERENCES_SESSION_USERNAME, "") ?: "")
+                .header("Api-Username", BuildConfig.DiscourseAdmin)
                 .method(original.method, original.body)
                 .build()
 
