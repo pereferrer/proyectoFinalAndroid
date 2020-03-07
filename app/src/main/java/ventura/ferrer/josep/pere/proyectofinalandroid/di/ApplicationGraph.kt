@@ -6,7 +6,7 @@ import javax.inject.Singleton
 
 // @Component makes Dagger create a graph of dependencies
 @Singleton
-@Component(modules = [RegisterModule::class, RegisterAbstractModule::class, UtilsModule::class])
+@Component(modules = [LoginModule::class, LoginAbstractModule::class,RegisterModule::class, RegisterAbstractModule::class, UtilsModule::class])
 interface ApplicationGraph {
 
 

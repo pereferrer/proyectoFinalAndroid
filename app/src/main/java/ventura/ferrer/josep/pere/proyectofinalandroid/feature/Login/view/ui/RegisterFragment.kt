@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_register.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.RegisterModel
@@ -61,11 +59,13 @@ class RegisterFragment : Fragment(){
     }
 
     private fun goToSignIn(){
-
+        listener?.onSignInTap()
     }
 
     interface RegisterInteractionListener {
         fun onSignUpTap(registerModel: RegisterModel)
         fun onSignInTap()
     }
+
+
 }

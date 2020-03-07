@@ -30,43 +30,7 @@
             app:srcCompat="@drawable/ic_logo_eh_ho" />
 
         <EditText
-            android:id="@+id/editTextRegisterName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:autofillHints=""
-            android:background="@color/colorWhite"
-            android:ems="10"
-            android:hint="@string/name"
-            android:inputType="textPersonName"
-            tools:targetApi="o" />
-
-        <EditText
-            android:id="@+id/editTextRegisterMail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:autofillHints=""
-            android:background="@color/colorWhite"
-            android:ems="10"
-            android:hint="@string/mail"
-            android:inputType="textEmailAddress"
-            tools:targetApi="o" />
-
-        <EditText
-            android:id="@+id/editTextRegisterPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:autofillHints=""
-            android:background="@color/colorWhite"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            tools:targetApi="o" />
-
-        <EditText
-            android:id="@+id/editTextRegisterUsername"
+            android:id="@+id/editTextLoginUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
@@ -77,12 +41,24 @@
             android:inputType="textPersonName"
             tools:targetApi="o" />
 
+        <EditText
+            android:id="@+id/editTextLoginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:autofillHints=""
+            android:background="@color/colorWhite"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            tools:targetApi="o" />
+
         <Button
-            android:id="@+id/buttonRegisterSignUp"
+            android:id="@+id/buttonLoginSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            android:text="@string/signup"
+            android:text="@string/signin"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -97,20 +73,20 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textViewRegisterHaveAccount"
+            android:id="@+id/textViewLoginHaveAccount"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@string/already_have_an_account"
+            android:text="@string/dontHaveAccount"
             android:textAlignment="center"
             android:textColor="@color/colorWhite" />
 
         <Button
-            android:id="@+id/buttonRegisterSignIn"
+            android:id="@+id/buttonLoginSignUp"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            android:text="@string/signin"
+            android:text="@string/signup"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>

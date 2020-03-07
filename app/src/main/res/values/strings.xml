@@ -10,4 +10,6 @@
     <string name="signin">SignIn</string>
     <string name="logo">Logo</string>
     <string name="user_created">User created successfully</string>
+    <string name="user_logged">User logged successfully</string>
+    <string name="dontHaveAccount">Don\'t have an account?</string>
 </resources>

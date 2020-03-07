@@ -41,3 +41,48 @@ data class RegisterModelResponse(
         return "RegisterModelResponse(success='$success', active='$active', message='$message', user_id='$user_id')"
     }
 }
+
+data class LoginModel(
+    @Expose
+    @SerializedName("login")
+    val login: String,
+    @Expose
+    @SerializedName("password")
+    val password: String
+) {
+    override fun toString(): String {
+        return "RegisterModel(login='$login', password='$password')"
+    }
+}
+
+data class LoginModelResponse(
+    @Expose
+    @SerializedName("user")
+    val user: User
+) {
+    override fun toString(): String {
+        return "RegisterModelResponse(user='$user')"
+    }
+}
+
+data class User(
+    @Expose
+    @SerializedName("id")
+    val id: Int,
+    @Expose
+    @SerializedName("username")
+    val username: String,
+    @Expose
+    @SerializedName("name")
+    val name: String,
+    @Expose
+    @SerializedName("avatarTemplate")
+    val avatarTemplate: String,
+    @Expose
+    @SerializedName("email")
+    val email: String
+) {
+    override fun toString(): String {
+        return "RegisterModelResponse(id='$id',username='$username', name='$name', avatarTemplate='$avatarTemplate', email='$email')"
+    }
+}
