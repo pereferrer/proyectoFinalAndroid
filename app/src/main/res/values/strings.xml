@@ -11,5 +11,10 @@
     <string name="logo">Logo</string>
     <string name="user_created">User created successfully</string>
     <string name="user_logged">User logged successfully</string>
+    <string name="recover_password_completed">Recover password successfully</string>
     <string name="dontHaveAccount">Don\'t have an account?</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="recover_password_field_empty">When recover password the field Username can not be empty</string>
+    <string name="sign_in_field_empty">When sign in the fields Username and password can not be empty</string>
+    <string name="sign_up_field_empty">When sign up the fields Username, password, mail and name can not be empty</string>
 </resources>

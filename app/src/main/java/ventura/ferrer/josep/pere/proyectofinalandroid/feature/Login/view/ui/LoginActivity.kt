@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import androidx.lifecycle.Observer
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_login.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.di.DaggerApplicationGraph
 import ventura.ferrer.josep.pere.proyectofinalandroid.di.UtilsModule
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.ForgotPasswordModel
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LoginModel
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.RegisterModel
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.state.LoginManagementState
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.viewmodel.LoginViewModel
 import java.util.*
 import javax.inject.Inject
@@ -42,7 +46,7 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
     private fun initModel(){
         loginViewModel.registerManagementState.observe(this, Observer{state->
             when (state){
-
+                is LoginManagementState.FormErrorReported -> showError(msg = state.errorMsg)
             }
         })
     }
@@ -70,6 +74,14 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
             )
             .addToBackStack(LOGIN_FRAGMENT_TAG)
             .commit()
+    }
+
+    override fun onRecoverPassword(forgotPassword: ForgotPasswordModel) {
+        loginViewModel.onRecoverPassword(context = this, forgotPassword = forgotPassword)
+    }
+
+    private fun showError(msg: String) {
+        Snackbar.make(fragmentContainer, msg, Snackbar.LENGTH_LONG).show()
     }
 }
 

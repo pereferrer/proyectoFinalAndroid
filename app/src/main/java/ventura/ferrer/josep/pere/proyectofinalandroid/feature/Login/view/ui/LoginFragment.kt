@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.login_fragment.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.ForgotPasswordModel
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LoginModel
 
 const val LOGIN_FRAGMENT_TAG = "LOGIN_FRAGMENT"
@@ -38,12 +39,16 @@ class LoginFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         buttonLoginSignIn.setOnClickListener {
-            println("sadadasdsasdaads")
             goToSignIn()
         }
 
         buttonLoginSignUp.setOnClickListener {
             goToSignUp()
+        }
+
+        buttonLoginForgotPassword.setOnClickListener {
+            println("sadadasdsasdaads")
+            onRecoverPassword()
         }
     }
 
@@ -51,11 +56,17 @@ class LoginFragment : Fragment(){
         listener?.onSignUpTap()
     }
 
-    private fun goToSignIn(){
-        var userName:String = editTextLoginUsername.text.toString()
-        var password:String = editTextLoginPassword.text.toString()
+    private fun onRecoverPassword(){
+        val login:String = editTextLoginUsername.text.toString()
+        val forgotPasswordModel: ForgotPasswordModel = ForgotPasswordModel(login)
+        listener?.onRecoverPassword(forgotPasswordModel)
+    }
 
-        var loginModel:LoginModel = LoginModel(userName,password)
+    private fun goToSignIn(){
+        val userName:String = editTextLoginUsername.text.toString()
+        val password:String = editTextLoginPassword.text.toString()
+
+        val loginModel:LoginModel = LoginModel(userName,password)
 
         listener?.onSignInTap(loginModel)
     }
@@ -63,5 +74,6 @@ class LoginFragment : Fragment(){
     interface LoginInteractionListener {
         fun onSignInTap(loginrModel: LoginModel)
         fun onSignUpTap()
+        fun onRecoverPassword(forgotPassword: ForgotPasswordModel)
     }
 }

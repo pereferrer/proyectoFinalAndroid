@@ -86,3 +86,27 @@ data class User(
         return "RegisterModelResponse(id='$id',username='$username', name='$name', avatarTemplate='$avatarTemplate', email='$email')"
     }
 }
+
+
+data class ForgotPasswordModel(
+    @Expose
+    @SerializedName("login")
+    val login: String
+) {
+    override fun toString(): String {
+        return "RegisterModel(login='$login')"
+    }
+}
+
+data class ForgotPasswordResponse(
+    @Expose
+    @SerializedName("success")
+    val success: String,
+    @Expose
+    @SerializedName("user_found")
+    val user_found: Boolean
+) {
+    override fun toString(): String {
+        return "RegisterModelResponse(success='$success', user_found='$user_found')"
+    }
+}
