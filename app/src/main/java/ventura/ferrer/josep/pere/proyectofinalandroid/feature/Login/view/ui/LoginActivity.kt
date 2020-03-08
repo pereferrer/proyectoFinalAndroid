@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
         loginViewModel.registerManagementState.observe(this, Observer{state->
             when (state){
                 is LoginManagementState.FormErrorReported -> showError(msg = state.errorMsg)
+                is LoginManagementState.RequestErrorReported -> showError(msg = state.errorMsg)
             }
         })
     }

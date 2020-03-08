@@ -46,20 +46,18 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                     response.body().takeIf { it != null }
                         ?.let {
                             val c: RegisterModelResponse = response.body()!!
-                            println("register" + c.message)
-                            _registerManagementState.value = LoginManagementState.RegisterUserCompleted
-                            LoginManagementState.UserRegistredSuccessfully(msg = context.getString(R.string.user_created))
+                            if(c.success){
+                                _registerManagementState.value = LoginManagementState.RegisterUserCompleted
+                                LoginManagementState.UserRegistredSuccessfully(msg = context.getString(R.string.user_created))
+                            }else{
+                                _registerManagementState.value = LoginManagementState.RequestErrorReported(c.message)
+                            }
                         }
                         ?: run { _registerManagementState.value = LoginManagementState.RegisterUserCompleted
-                            println("Error 1")
-                            //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                            _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! User not created")
                         }
                 } else {
-                    println("Error 2")
-                    println("Error 2" + response.code().toString())
-                    println("Error 2" + response.toString().toString())
-                    println("Error 2" + response.errorBody().toString())
-                    //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                    _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
                 println("Done launch")
             }
@@ -89,20 +87,18 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                     response.body().takeIf { it != null }
                         ?.let {
                             val c: LoginModelResponse = response.body()!!
-                            println("register" + c.user.username)
-                            _registerManagementState.value = LoginManagementState.LoginUserCompleted
-                            LoginManagementState.UserLoggedSuccessfully(msg = context.getString(R.string.user_logged))
+                            if(c.user != null){
+                                _registerManagementState.value = LoginManagementState.LoginUserCompleted
+                                LoginManagementState.UserLoggedSuccessfully(msg = context.getString(R.string.user_logged))
+                            }else{
+                                _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username or Password are wrong!")
+                            }
                         }
                         ?: run { _registerManagementState.value = LoginManagementState.LoginUserCompleted
-                            println("Error 1")
-                            //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                            _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username or Password are wrong!")
                         }
                 } else {
-                    println("Error 2")
-                    println("Error 2" + response.code().toString())
-                    println("Error 2" + response.toString().toString())
-                    println("Error 2" + response.errorBody().toString())
-                    //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                    _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
                 println("Done launch")
             }
@@ -133,19 +129,18 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                         ?.let {
                             val c: ForgotPasswordResponse = response.body()!!
                             println("forgot" + c.success)
-                            _registerManagementState.value = LoginManagementState.ForgotPasswordUserCompleted
-                            LoginManagementState.RecoverPasswordSuccessfully(msg = context.getString(R.string.recover_password_completed))
+                            if(c.user_found){
+                                _registerManagementState.value = LoginManagementState.ForgotPasswordUserCompleted
+                                LoginManagementState.RecoverPasswordSuccessfully(msg = context.getString(R.string.recover_password_completed))
+                            }else{
+                                _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username not found!")
+                            }
                         }
                         ?: run { _registerManagementState.value = LoginManagementState.ForgotPasswordUserCompleted
-                            println("Error 1")
-                            //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                            _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username not found!")
                         }
                 } else {
-                    println("Error 2")
-                    println("Error 2" + response.code().toString())
-                    println("Error 2" + response.toString().toString())
-                    println("Error 2" + response.errorBody().toString())
-                    //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                    _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
                 println("Done launch")
             }
