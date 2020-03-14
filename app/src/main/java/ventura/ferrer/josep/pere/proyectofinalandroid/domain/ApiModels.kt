@@ -80,10 +80,16 @@ data class User(
     val avatarTemplate: String,
     @Expose
     @SerializedName("email")
-    val email: String
+    val email: String,
+    @Expose
+    @SerializedName("last_seen_at")
+    val last_seen_at: String,
+    @Expose
+    @SerializedName("moderator")
+    val moderator: String
 ) {
     override fun toString(): String {
-        return "RegisterModelResponse(id='$id',username='$username', name='$name', avatarTemplate='$avatarTemplate', email='$email')"
+        return "RegisterModelResponse(id='$id',username='$username', name='$name', avatarTemplate='$avatarTemplate', email='$email', last_seen_at='$last_seen_at', moderator='$moderator')"
     }
 }
 
@@ -110,3 +116,23 @@ data class ForgotPasswordResponse(
         return "RegisterModelResponse(success='$success', user_found='$user_found')"
     }
 }
+
+data class DetailUserResponse(
+    @Expose
+    @SerializedName("user")
+    val user: User
+) {
+    override fun toString(): String {
+        return "RegisterModelResponse(user='$user')"
+    }
+}
+
+data class PrivateMessageListResponse(
+    @SerializedName("topic_list")
+    val topic_list: TopicListResponse
+)
+
+data class TopicListResponse(
+    @SerializedName("topics")
+    val topics:List<Topic>
+)

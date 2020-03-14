@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.LoginRepo
+import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.UserRepo
 import javax.inject.Singleton
 
 @Module
@@ -17,4 +18,11 @@ class LoginModule {
             ctx = context
             retroF = retrofit
         }
+
+    @Singleton
+    @Provides
+    fun provideUserRepo(context: Context): UserRepo {
+        UserRepo.ctx = context
+        return UserRepo
+    }
 }

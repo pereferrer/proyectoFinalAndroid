@@ -4,21 +4,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.di.DaggerApplicationGraph
 import ventura.ferrer.josep.pere.proyectofinalandroid.di.UtilsModule
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.ForgotPasswordModel
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LoginModel
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.RegisterModel
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.state.LoginManagementState
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.viewmodel.LoginViewModel
 import java.util.*
 import javax.inject.Inject
 
-class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionListener, LoginFragment.LoginInteractionListener {
+class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionListener, LoginFragment.LoginInteractionListener, DetailUserFragment.DetailUserInteractionListener {
 
     @Inject
     lateinit var loginViewModel: LoginViewModel
@@ -36,8 +35,8 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
         if(savedInstanceState == null){
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer,
-                    LoginFragment(),
-                    LOGIN_FRAGMENT_TAG).commit()
+                    DetailUserFragment(),
+                    DETAIL_USER_FRAGMENT_TAG).commit()
         }
 
         initModel()
@@ -48,8 +47,34 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
             when (state){
                 is LoginManagementState.FormErrorReported -> showError(msg = state.errorMsg)
                 is LoginManagementState.RequestErrorReported -> showError(msg = state.errorMsg)
+                is LoginManagementState.DetailUserSuccessfully -> showDetailUser(detailUser = state.detailUser)
+                is LoginManagementState.PrivateMessageListSuccessfully -> showPrivateMessageList(topics = state.topics)
             }
         })
+    }
+
+    private fun showPrivateMessageList(topics: List<Topic>) {
+        getDetailUserFragmentIfAvailableOrNull()?.run {
+            showData(topics = topics)
+        }
+    }
+
+    private fun showDetailUser(detailUser: DetailUserResponse) {
+        getDetailUserFragmentIfAvailableOrNull()?.run {
+            showData(detailUserResponse = detailUser)
+        }
+    }
+
+    private fun getDetailUserFragmentIfAvailableOrNull(): DetailUserFragment? {
+        val fragment: Fragment? =
+            supportFragmentManager.findFragmentByTag(DETAIL_USER_FRAGMENT_TAG)
+
+        return if (fragment != null && fragment.isVisible) {
+            fragment as DetailUserFragment
+
+        } else {
+            null
+        }
     }
 
     override fun onSignUpTap(registerModel: RegisterModel) {
@@ -83,6 +108,14 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
 
     private fun showError(msg: String) {
         Snackbar.make(fragmentContainer, msg, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun getDetailUser() {
+        loginViewModel.ongetDetailUser(context = this)
+    }
+
+    override fun getPrivateMessageList() {
+        loginViewModel.getPrivateMessageList(context = this)
     }
 }
 

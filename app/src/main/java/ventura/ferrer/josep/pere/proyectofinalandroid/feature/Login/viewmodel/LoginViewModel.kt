@@ -9,12 +9,13 @@ import retrofit2.Response
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.LoginRepo
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.RegisterRepo
+import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.UserRepo
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.state.LoginManagementState
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo, private  val loginRepo: LoginRepo):ViewModel(), CoroutineScope {
+class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo, private  val loginRepo: LoginRepo, private  val userRepo: UserRepo):ViewModel(), CoroutineScope {
 
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -47,6 +48,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                         ?.let {
                             val c: RegisterModelResponse = response.body()!!
                             if(c.success){
+                                saveSession(registerModel.username)
                                 _registerManagementState.value = LoginManagementState.RegisterUserCompleted
                                 LoginManagementState.UserRegistredSuccessfully(msg = context.getString(R.string.user_created))
                             }else{
@@ -88,6 +90,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                         ?.let {
                             val c: LoginModelResponse = response.body()!!
                             if(c.user != null){
+                                saveSession(c.user.username)
                                 _registerManagementState.value = LoginManagementState.LoginUserCompleted
                                 LoginManagementState.UserLoggedSuccessfully(msg = context.getString(R.string.user_logged))
                             }else{
@@ -152,8 +155,75 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
 
     }
 
+    fun ongetDetailUser(context: Context){
+            val job = async{
+                val a = LoginRepo.detailUser(getUserName())
+                println("Done async")
+                a
+            }
 
+            launch(Dispatchers.Main) {
+                val response: Response<DetailUserResponse> = job.await()
+                println("Done await")
 
+                //todo deshabilitar loading
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }
+                        ?.let {
+                            val c: DetailUserResponse = response.body()!!
+                            println("forgot" + c.user.id)
+                            if(c.user.id != null){
+                                _registerManagementState.value = LoginManagementState.DetailUserCompleted
+                                _registerManagementState.value = LoginManagementState.DetailUserSuccessfully(c)
+                            }else{
+                                _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username not found!")
+                            }
+                        }
+                        ?: run { _registerManagementState.value = LoginManagementState.DetailUserCompleted
+                            _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username not found!")
+                        }
+                } else {
+                    _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
+                }
+                println("Done launch")
+            }
+            println("Done!")
+    }
+
+    fun getPrivateMessageList(context: Context){
+        val job = async{
+            val a = LoginRepo.privateMessageListUser(getUserName())
+            println("Done async")
+            a
+        }
+
+        launch(Dispatchers.Main) {
+            val response: Response<PrivateMessageListResponse> = job.await()
+            println("Done await")
+
+            //todo deshabilitar loading
+            if (response.isSuccessful) {
+                response.body().takeIf { it != null }
+                    ?.let {
+                        val c: PrivateMessageListResponse = response.body()!!
+                        println("forgot" + c.topic_list.topics)
+                        if(c.topic_list.topics != null){
+                            _registerManagementState.value = LoginManagementState.PrivateMessageListUserCompleted
+                            _registerManagementState.value = LoginManagementState.PrivateMessageListSuccessfully(c.topic_list.topics)
+                        }else{
+                            _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username not found!")
+                        }
+                    }
+                    ?: run {_registerManagementState.value = LoginManagementState.PrivateMessageListUserCompleted
+                        _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username not found!")
+                    }
+            } else {
+                _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
+            }
+            println("Done launch")
+        }
+        println("Done!")
+    }
 
 
     private fun isFormValid(model: RegisterModel) =
@@ -162,4 +232,17 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
         with(model) { login.isNotEmpty()  && password.isNotEmpty()}
     private fun isFormValid(model: ForgotPasswordModel) =
         with(model) { login.isNotEmpty()}
+
+
+    private  fun isLogged(): Boolean{
+        return userRepo.isLogged()
+    }
+
+    private fun saveSession(username: String){
+        userRepo.saveSession(username)
+    }
+
+    private fun getUserName():String{
+        return userRepo.getUsername()
+    }
 }
