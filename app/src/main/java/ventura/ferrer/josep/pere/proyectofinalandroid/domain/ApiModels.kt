@@ -2,6 +2,7 @@ package ventura.ferrer.josep.pere.proyectofinalandroid.domain
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import org.json.JSONObject
 
 data class RegisterModel(
     @Expose
@@ -136,3 +137,47 @@ data class TopicListResponse(
     @SerializedName("topics")
     val topics:List<Topic>
 )
+
+data class ListTopic(
+    @SerializedName("topic_list")
+    val topic_list: TopicListResponse
+)
+
+data class CreateTopicModel(
+    @Expose
+    @SerializedName("title")
+    val title: String,
+    @Expose
+    @SerializedName("raw")
+    val raw: String
+) {
+    override fun toString(): String {
+        return "CreateTopicModel(title='$title', raw='$raw')"
+    }
+}
+
+data class CreateTopicModelResponse(
+    @SerializedName("name")
+    @Expose
+    val name: String,
+    @SerializedName("username")
+    @Expose
+    val username: String
+)
+data class LatestPostRetrofit(
+    @SerializedName("latest_posts")
+    val latest_posts:List<LatestPost>
+)
+
+data class CreatePostModel(
+    val title: String,
+    val topicId: String,
+    val raw: String
+) {
+    fun toJson(): JSONObject {
+        return JSONObject()
+            .put("topic_id", topicId)
+            .put("title", title)
+            .put("raw", raw)
+    }
+}

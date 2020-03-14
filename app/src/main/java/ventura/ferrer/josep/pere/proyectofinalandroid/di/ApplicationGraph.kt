@@ -2,11 +2,12 @@ package ventura.ferrer.josep.pere.proyectofinalandroid.di
 
 import dagger.Component
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.ui.LoginActivity
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.feature.topics.view.ui.TopicsActivity
 import javax.inject.Singleton
 
 // @Component makes Dagger create a graph of dependencies
 @Singleton
-@Component(modules = [LoginModule::class, LoginAbstractModule::class,RegisterModule::class, RegisterAbstractModule::class, UtilsModule::class])
+@Component(modules = [TopicsModule::class, TopicsAbstractModule::class, LoginModule::class, LoginAbstractModule::class,RegisterModule::class, RegisterAbstractModule::class, UtilsModule::class])
 interface ApplicationGraph {
 
 
@@ -14,4 +15,6 @@ interface ApplicationGraph {
     // dependency you want
     //fun inject(topicsActivity: TopicsActivity)
     fun inject(loginActivity: LoginActivity)
+    fun inject(topicsActivity: TopicsActivity)
+
 }

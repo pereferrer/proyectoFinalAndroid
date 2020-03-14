@@ -1,9 +1,8 @@
 package ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
@@ -14,7 +13,7 @@ import ventura.ferrer.josep.pere.proyectofinalandroid.di.UtilsModule
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.state.LoginManagementState
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.viewmodel.LoginViewModel
-import java.util.*
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.feature.topics.view.ui.TopicsActivity
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionListener, LoginFragment.LoginInteractionListener, DetailUserFragment.DetailUserInteractionListener {
@@ -35,10 +34,11 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
         if(savedInstanceState == null){
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer,
-                    DetailUserFragment(),
-                    DETAIL_USER_FRAGMENT_TAG).commit()
+                    LoginFragment(),
+                    LOGIN_FRAGMENT_TAG).commit()
         }
 
+        isLogged()
         initModel()
     }
 
@@ -49,6 +49,8 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
                 is LoginManagementState.RequestErrorReported -> showError(msg = state.errorMsg)
                 is LoginManagementState.DetailUserSuccessfully -> showDetailUser(detailUser = state.detailUser)
                 is LoginManagementState.PrivateMessageListSuccessfully -> showPrivateMessageList(topics = state.topics)
+                is LoginManagementState.UserLoggedSuccessfully -> goToTopics()
+                is LoginManagementState.UserRegistredSuccessfully -> goToTopics()
             }
         })
     }
@@ -116,6 +118,18 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
 
     override fun getPrivateMessageList() {
         loginViewModel.getPrivateMessageList(context = this)
+    }
+
+    private fun isLogged(){
+        goToTopics()
+    }
+
+    private fun goToTopics(){
+        println("lalalala 2")
+        if(loginViewModel.isLogged()){
+            val intent = Intent(this, TopicsActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
 

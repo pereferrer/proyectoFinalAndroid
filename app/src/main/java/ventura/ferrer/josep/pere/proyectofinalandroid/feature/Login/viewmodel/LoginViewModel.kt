@@ -50,7 +50,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                             if(c.success){
                                 saveSession(registerModel.username)
                                 _registerManagementState.value = LoginManagementState.RegisterUserCompleted
-                                LoginManagementState.UserRegistredSuccessfully(msg = context.getString(R.string.user_created))
+                                _registerManagementState.value = LoginManagementState.UserRegistredSuccessfully(msg = context.getString(R.string.user_created))
                             }else{
                                 _registerManagementState.value = LoginManagementState.RequestErrorReported(c.message)
                             }
@@ -91,8 +91,10 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                             val c: LoginModelResponse = response.body()!!
                             if(c.user != null){
                                 saveSession(c.user.username)
+
+                                println("lalalala 1")
                                 _registerManagementState.value = LoginManagementState.LoginUserCompleted
-                                LoginManagementState.UserLoggedSuccessfully(msg = context.getString(R.string.user_logged))
+                                _registerManagementState.value = LoginManagementState.UserLoggedSuccessfully(msg = context.getString(R.string.user_logged))
                             }else{
                                 _registerManagementState.value = LoginManagementState.RequestErrorReported("Opps! Username or Password are wrong!")
                             }
@@ -234,7 +236,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
         with(model) { login.isNotEmpty()}
 
 
-    private  fun isLogged(): Boolean{
+    fun isLogged(): Boolean{
         return userRepo.isLogged()
     }
 

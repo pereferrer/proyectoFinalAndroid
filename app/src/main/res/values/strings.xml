@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">proyectoFinalAndroid</string>
-    <string name="label_loading">Loading</string>
     <string name="name">Name</string>
     <string name="mail">Mail</string>
     <string name="password">Password</string>
@@ -18,4 +17,57 @@
     <string name="sign_in_field_empty">When sign in the fields Username and password can not be empty</string>
     <string name="sign_up_field_empty">When sign up the fields Username, password, mail and name can not be empty</string>
     <string name="try_it_again">Something went wrong. Try it again later</string>
+    <string name="label_author">Author</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_content">Content</string>
+    <string name="title_send">Send</string>
+    <string name="error_empty">This field cannot be empty</string>
+
+    <string name="minutes_zero">Just now</string>
+    <string name="error_password_length">Password must be at least 10 characters</string>
+    <string name="error_password_match">The passwords doesn\'t match</string>
+    <string name="label_loading">Loading</string>
+    <string name="title_log_out">Log out</string>
+    <string name="error_not_registered">User not registered</string>
+    <string name="error_network">No internet connection, check it and try again</string>
+    <string name="error_request_default">We\'re sorry, something bad happened, try again later</string>
+    <string name="error_invalid_response">Invalid response from server</string>
+    <string name="label_default_error">Oops something bad happened</string>
+    <string name="label_retry">Retry</string>
+    <string name="label_create_topic">Create topic</string>
+    <string name="label_create_post">Creando nuevo post</string>
+    <string name="title_create_post">Create post</string>
+    <string name="close">close</string>
+    <string name="message_topic_created">Topic created succesfully</string>
+    <string name="eh_ho">Eh-Ho</string>
+    <string name="developed_by_pere_ferrer_keepcoding">Developed By Pere Ferrer @Keepcoding</string>
+    <string name="latest_news">Latest news</string>
+    <string name="posts">Posts</string>
+    <string name="topics">Topics</string>
+    <string name="create_topic">Create topic</string>
+
+    <plurals name="years">
+        <item quantity="one">%d year</item>
+        <item quantity="other">%d years</item>
+    </plurals>
+
+    <plurals name="months">
+        <item quantity="one">%d month</item>
+        <item quantity="other">%d months</item>
+    </plurals>
+
+    <plurals name="days">
+        <item quantity="one">%d day</item>
+        <item quantity="other">%d days</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>
