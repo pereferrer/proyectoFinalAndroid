@@ -32,6 +32,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
 
     fun onSignUpTap(context: Context, registerModel: RegisterModel){
         if(isFormValid(model = registerModel)){
+            saveSession(registerModel.username)
             val job = async{
                 val a = RegisterRepo.registerNewUser(registerModel)
                 println("Done async")
@@ -48,7 +49,6 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                         ?.let {
                             val c: RegisterModelResponse = response.body()!!
                             if(c.success){
-                                saveSession(registerModel.username)
                                 _registerManagementState.value = LoginManagementState.RegisterUserCompleted
                                 _registerManagementState.value = LoginManagementState.UserRegistredSuccessfully(msg = context.getString(R.string.user_created))
                             }else{
@@ -72,6 +72,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
     }
 
     fun onSignInTap(context: Context, loginModel: LoginModel){
+        saveSession(loginModel.login)
         if(isFormValid(model = loginModel)){
 
             val job = async{

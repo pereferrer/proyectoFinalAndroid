@@ -16,8 +16,6 @@ class AdminRequest(
     override fun getHeaders(): MutableMap<String, String> {
         val headers = mutableMapOf<String, String>()
         headers["Api-Key"] = BuildConfig.DiscourseDomain
-        headers["Api-Username"] = BuildConfig.DiscourseAdmin
-
         return headers
     }
 }
