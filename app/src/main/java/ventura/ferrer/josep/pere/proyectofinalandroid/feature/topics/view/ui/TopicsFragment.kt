@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
@@ -75,6 +76,18 @@ class TopicsFragment : Fragment() {
             listener?.onRetryButtonClicked()
             swiperefreshTopics.isRefreshing = false   // reset the SwipeRefreshLayout (stop the loading spinner)
         }
+
+        topics_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+
+        })
     }
 
     override fun onResume() {

@@ -2,12 +2,15 @@ package ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_create_topic.*
+import kotlinx.android.synthetic.main.fragment_topics.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.LoadingDialogFragment
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.CreateTopicModel
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.adapter.TopicsAdapter
 
 const val TAG_LOADING_DIALOG = "loading_dialog"
 
@@ -28,6 +31,8 @@ class CreateTopicFragment : Fragment() {
         setHasOptionsMenu(true)
 
         loadingDialog = LoadingDialogFragment.newInstance(getString(R.string.label_create_topic))
+
+
     }
 
     override fun onCreateView(
