@@ -1,8 +1,10 @@
 package ventura.ferrer.josep.pere.proyectofinalandroid.data.service
 
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LatestPostRetrofit
+import retrofit2.http.POST
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
 
 interface PostService {
 

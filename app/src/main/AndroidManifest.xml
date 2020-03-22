@@ -17,7 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".feature.posts.PostsActivity"></activity>
+        <activity android:name=".feature.posts.PostsActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.ActionBar">
+        </activity>
         <activity android:name=".feature.feature.topics.view.ui.TopicsActivity"/>
     </application>
 

@@ -10,9 +10,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.*
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.CreatePostModel
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LatestPostRetrofit
-import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Post
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
 
 object PostsRepo : PostsRepository{
 
@@ -70,11 +68,6 @@ object PostsRepo : PostsRepository{
     }
 
     override suspend fun getPostsAcrossTopics(): Response<LatestPostRetrofit> {
-        if(retroF == null){
-            println("Hola pere")
-        }
-        println("asddsdaassdasa"  + retroF)
-
         val a =  retroF.create(PostService::class.java).getPostsAcrossTopics()
         println("He acabat retrofit")
         return a

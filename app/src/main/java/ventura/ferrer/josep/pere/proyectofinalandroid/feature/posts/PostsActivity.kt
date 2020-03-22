@@ -1,5 +1,6 @@
 package ventura.ferrer.josep.pere.proyectofinalandroid.feature.posts
 
+import android.app.PendingIntent.getActivity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,6 +25,7 @@ class PostsActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posts)
+
 
         setTitle(R.string.posts)
 

@@ -164,6 +164,7 @@ data class CreateTopicModelResponse(
     @Expose
     val username: String
 )
+
 data class LatestPostRetrofit(
     @SerializedName("latest_posts")
     val latest_posts:List<LatestPost>
@@ -181,3 +182,33 @@ data class CreatePostModel(
             .put("raw", raw)
     }
 }
+
+
+
+data class CreatePostToTopicModel(
+    @Expose
+    @SerializedName("topic_id")
+    val topicId: String,
+    @Expose
+    @SerializedName("raw")
+    val raw: String
+) {
+    override fun toString(): String {
+        return "CreatePostToTopicModel(title='$topicId', raw='$raw')"
+    }
+}
+
+data class CreatePostToTopicResponse(
+    @SerializedName("id")
+    @Expose
+    val id: Int,
+    @SerializedName("name")
+    @Expose
+    val name: String,
+    @SerializedName("username")
+    @Expose
+    val username: String,
+    @SerializedName("avatar_template")
+    @Expose
+    val avatarTemplate: String
+)
