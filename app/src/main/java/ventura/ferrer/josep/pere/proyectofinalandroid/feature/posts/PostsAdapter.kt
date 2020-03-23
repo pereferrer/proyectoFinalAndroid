@@ -41,6 +41,7 @@ class PostsAdapter(
         this.posts.clear()
         this.posts.addAll(posts)
         notifyDataSetChanged()
+
     }
 
     inner class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -75,4 +76,6 @@ class PostsAdapter(
 
         }
     }
+
+
 }

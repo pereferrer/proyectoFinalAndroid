@@ -81,21 +81,26 @@ data class Post(
     @SerializedName("cooked")
     val cooked: String,
     @SerializedName("date")
-    val date: Date = Date()
+    val date: Date = Date(),
+    @SerializedName("stream")
+    val stream : MutableList<Int>?
 ) {
     companion object {
 
         fun parsePosts(response: JSONObject): List<Post> {
+            println("Pere 5")
             val jsonPosts = response.getJSONObject("post_stream")
                 .getJSONArray("posts")
-
+            println("Pere 6")
             val posts = mutableListOf<Post>()
-
-
+            println("Pere 7")
+            val stream = parseStreams(response)
+            println("Pere 8")
             for (i in 0 until jsonPosts.length()) {
                 val parsedPost =
                     parsePost(
-                        jsonPosts.getJSONObject(i)
+                        jsonPosts.getJSONObject(i),
+                        stream
                     )
                 posts.add(parsedPost)
             }
@@ -103,7 +108,8 @@ data class Post(
             return posts
         }
 
-        fun parsePost(jsonObject: JSONObject): Post {
+        fun parsePost(jsonObject: JSONObject, stream: MutableList<Int>?): Post {
+            println("Pere 9")
             val date = jsonObject.getString("created_at")
                 .replace("Z", "+0000")
 
@@ -115,8 +121,28 @@ data class Post(
                 jsonObject.getInt("id").toString(),
                 jsonObject.getString("username"),
                 jsonObject.getString("cooked"),
-                dateFormatted
+                dateFormatted,
+                stream
             )
+        }
+
+        fun parseStreams(response: JSONObject): MutableList<Int>? {
+            println("Pere 1")
+            if(response.getJSONObject("post_stream").has("stream")){
+                val jsonPosts = response.getJSONObject("post_stream")
+                    .getJSONArray("stream")
+                println("Pere 2")
+                val streams = mutableListOf<Int>()
+
+                println("Pere 3")
+                for (i in 0 until jsonPosts.length()) {
+                    val id = jsonPosts.getInt(i)
+                    streams.add(id)
+                }
+                println("Pere 4")
+                return streams
+            }
+            return null
         }
     }
 
@@ -159,6 +185,7 @@ data class Post(
         return TimeOffset(0, Calendar.MINUTE)
     }
 }
+
 
 data class LatestPost(
     @SerializedName("topic_id")

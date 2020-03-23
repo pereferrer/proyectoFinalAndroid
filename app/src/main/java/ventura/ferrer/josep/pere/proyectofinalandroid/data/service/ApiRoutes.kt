@@ -31,6 +31,15 @@ object ApiRoutes {
             .build()
             .toString()
 
+    fun getPostsByTopicIdPagination(idTopic:String, idPost:String) =
+        uriBuilder()
+            .appendPath("t")
+            .appendPath("${idTopic}")
+            .appendPath("posts.json")
+            .appendQueryParameter("post_ids[]", idPost)
+            .build()
+            .toString()
+
     fun createTopic() =
         uriBuilder()
             .appendPath("posts.json")

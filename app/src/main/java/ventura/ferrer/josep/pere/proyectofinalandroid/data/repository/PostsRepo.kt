@@ -1,7 +1,9 @@
 package ventura.ferrer.josep.pere.proyectofinalandroid.data.repository
 
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import com.android.volley.NetworkError
 import com.android.volley.Request
 import com.android.volley.ServerError
@@ -66,6 +68,58 @@ object PostsRepo : PostsRepository{
         ApiRequestQueue.getRequestQueue(context)
             .add(request)
     }
+
+    fun getNextPost(idTopic:String,
+                    idPost:String,
+                    context: Context,
+                    onSuccess:(List<Post>) ->Unit,
+                    onError:(RequestError)->Unit)
+    {
+
+        val username = UserRepo.getUsername()
+        println("El username es?: " + username)
+        val request = UserRequest(
+            username,
+            Request.Method.GET,
+            ApiRoutes.getPostsByTopicIdPagination(idTopic,idPost),
+            null,
+            {
+                it?.let {
+                    onSuccess.invoke(
+                        Post.parsePosts(
+                            it
+                        )
+                    )
+                }
+
+                if (it == null)
+                    onError.invoke(
+                        RequestError(
+                            messageResId = R.string.error_invalid_response
+                        )
+                    )
+            },
+            {
+                it.printStackTrace()
+                if (it is NetworkError)
+                    onError.invoke(
+                        RequestError(
+                            messageResId = R.string.error_network
+                        )
+                    )
+                else
+                    onError.invoke(
+                        RequestError(
+                            it
+                        )
+                    )
+            })
+        println("cdsadsadads" +request + "dsa" + idTopic + "dcassd" + idPost)
+
+        ApiRequestQueue.getRequestQueue(context)
+            .add(request)
+    }
+
 
     override suspend fun getPostsAcrossTopics(): Response<LatestPostRetrofit> {
         val a =  retroF.create(PostService::class.java).getPostsAcrossTopics()
