@@ -11,7 +11,6 @@ import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.RegisterModel
 
 const val REGISTER_FRAGMENT_TAG = "REGISTER_FRAGMENT"
-
 class RegisterFragment : Fragment(){
 
     var listener: RegisterInteractionListener? = null

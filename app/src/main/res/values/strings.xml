@@ -49,6 +49,7 @@
     <string name="add_post">Add Post</string>
     <string name="cancel">Cancel</string>
     <string name="enter_description">Enter Description</string>
+    <string name="no_more_topics_to_load">No more topics to load</string>
 
     <plurals name="years">
         <item quantity="one">%d year</item>

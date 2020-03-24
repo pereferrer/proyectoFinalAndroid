@@ -135,7 +135,9 @@ data class PrivateMessageListResponse(
 
 data class TopicListResponse(
     @SerializedName("topics")
-    val topics:List<Topic>
+    val topics:List<Topic>,
+    @SerializedName("more_topics_url")
+    val more_topics_url: String
 )
 
 data class ListTopic(

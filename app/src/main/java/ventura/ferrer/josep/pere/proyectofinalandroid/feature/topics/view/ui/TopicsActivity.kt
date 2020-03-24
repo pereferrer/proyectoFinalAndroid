@@ -71,7 +71,8 @@ class TopicsActivity : AppCompatActivity(),
         topicViewModel.topicManagementState.observe(this, Observer { state ->
             when (state) {
                 TopicManagementState.Loading -> enableLoadingView()
-                is TopicManagementState.LoadTopicList -> loadTopicList(list = state.topicList)
+                is TopicManagementState.LoadTopicList -> loadTopicList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
+                is TopicManagementState.LoadMoreTopicList -> loadMoreTopicsList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
                 is TopicManagementState.GoToPosts -> goToPosts(state.topic)
                 is TopicManagementState.TopicCreatedSuccessfully -> showMessage(msg = state.msg)
                 is TopicManagementState.RequestErrorReported -> showRequestError(error = state.requestError)
@@ -83,6 +84,15 @@ class TopicsActivity : AppCompatActivity(),
                 }
             }
         })
+    }
+
+    private fun loadMoreTopicsList(list: List<Topic>, loadMoreTopicsUrl: String) {
+        println("He vuelto a la activity para volver al fragment")
+
+        getTopicsFragmentIfAvailableOrNull()?.run {
+            enableLoading(enabled = false)
+            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl)
+        }
     }
 
     private fun initNavigationDrawer(){
@@ -125,6 +135,12 @@ class TopicsActivity : AppCompatActivity(),
 
     override fun onLogOut() {
         topicViewModel.onLogOut(this)
+    }
+
+    override fun loadMoreTopics(no_definitions: Boolean, page: Int) {
+        println("Estoy en el bottom loadMoreTopics activity")
+
+        topicViewModel.loadMoreTopics(context = this, no_definitions = no_definitions, page = page)
     }
 
     override fun onTopicsFragmentResumed() {
@@ -188,10 +204,10 @@ class TopicsActivity : AppCompatActivity(),
     }
 
 
-    private fun loadTopicList(list: List<Topic>) {
+    private fun loadTopicList(list: List<Topic>, loadMoreTopicsUrl:String) {
         getTopicsFragmentIfAvailableOrNull()?.run {
             enableLoading(enabled = false)
-            loadTopicList(topicList = list)
+            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl)
         }
     }
 

@@ -25,4 +25,10 @@ object TopicsRepo: TopicsRepository {
         println("" + retroF.toString())
         return a
     }
+
+    override suspend fun loadMoreTopics(no_definitions: Boolean, page: Int): Response<ListTopic> {
+        val a =    retroF.create(TopicsService::class.java).loadMoreTopicsWithCoroutines(no_definitions, page)
+        println("" + retroF.toString())
+        return a
+    }
 }

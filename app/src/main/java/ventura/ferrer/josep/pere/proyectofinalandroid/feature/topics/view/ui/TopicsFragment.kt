@@ -12,10 +12,13 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.fragment_posts.*
 import kotlinx.android.synthetic.main.fragment_topics.*
+import kotlinx.android.synthetic.main.fragment_topics.parentLayout
 import kotlinx.android.synthetic.main.view_retry.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.RequestError
@@ -29,6 +32,8 @@ class TopicsFragment : Fragment() {
 
     var listener: TopicsInteractionListener? = null
     lateinit var adapter: TopicsAdapter
+    var loadMoreTopicsUrl:String = ""
+    var currentTopics = mutableListOf<Topic>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -88,6 +93,23 @@ class TopicsFragment : Fragment() {
             }
 
         })
+
+
+        listTopics.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            val linearLayoutManager = LinearLayoutManager(context)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(!listTopics.canScrollVertically(1)){
+                    onScrolledToBottom()
+                }
+            }
+
+            private fun onScrolledToBottom() {
+                println("Estoy en el bottom")
+                loadMoreTopics()
+
+            }
+        })
     }
 
     override fun onResume() {
@@ -119,9 +141,30 @@ class TopicsFragment : Fragment() {
     }
 
 
-    fun loadTopicList(topicList: List<Topic>) {
+    fun loadTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String) {
+        currentTopics.addAll(topicList)
+        this.loadMoreTopicsUrl = loadMoreTopicsUrl
         enableLoading(false)
         adapter.setTopics(topics = topicList)
+    }
+
+    fun loadMoreTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String) {
+        currentTopics.addAll(topicList)
+        this.loadMoreTopicsUrl = loadMoreTopicsUrl
+        enableLoading(false)
+        adapter.setTopics(topics = topicList)
+    }
+
+    fun loadMoreTopics(){
+        if(loadMoreTopicsUrl != ""){
+            println("Estoy en el loadMoreTopics")
+            enableLoading(true)
+            val page = loadMoreTopicsUrl.substring(33).toInt()
+            val definitions = loadMoreTopicsUrl.substring(27).toBoolean()
+            listener?.loadMoreTopics(definitions, page)
+        }else{
+            Snackbar.make(parentLayout, getString(R.string.no_more_topics_to_load), Snackbar.LENGTH_LONG).show()
+        }
     }
 
 
@@ -153,6 +196,7 @@ class TopicsFragment : Fragment() {
         fun onTopicSelected(topic: Topic)
         fun onGoToCreateTopic()
         fun onLogOut()
+        fun loadMoreTopics(no_definitions: Boolean, page: Int)
     }
 
 }

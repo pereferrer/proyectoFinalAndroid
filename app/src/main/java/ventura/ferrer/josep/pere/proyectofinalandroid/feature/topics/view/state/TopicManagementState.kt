@@ -8,7 +8,8 @@ import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Topic
 sealed class TopicManagementState {
     class GoToPosts(val topic: Topic): TopicManagementState()
     class GoToPostsByLatestPost(val latestPost: LatestPost): TopicManagementState()
-    class LoadTopicList(val topicList: List<Topic>) : TopicManagementState()
+    class LoadTopicList(val topicList: List<Topic>, val loadMoreTopicsUrl:String) : TopicManagementState()
+    class LoadMoreTopicList(val topicList: List<Topic>, val loadMoreTopicsUrl:String) : TopicManagementState()
     object OnGoToTopics : TopicManagementState()
     object OnGoToLatestNews : TopicManagementState()
     object NavigateToCreateTopic: TopicManagementState()

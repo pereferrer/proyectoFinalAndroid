@@ -135,8 +135,8 @@
                         response.body().takeIf { it != null }
                             ?.let {
                                 val topics: ListTopic = response.body()!!
-                                println("La lista de topics es: " +topics.toString())
-                                _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics)
+                                println("La lista de topics es: " + topics.topic_list.more_topics_url)
+                                _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url)
                             }
                             ?: run {
                                 //Todo TopicManagementState.RequestErrorReported(requestError = it)
@@ -147,6 +147,40 @@
                     println("Done launch")
                 }
                 println("Done!")
+        }
+
+        fun loadMoreTopics(context:Context?, no_definitions: Boolean, page: Int){
+            println("Estoy en loadmoretopics viewModel")
+
+            print(context)
+            val job = async {
+                val a = topicsRepo.loadMoreTopics(no_definitions, page)
+                println("Done async")
+                a
+            }
+
+            launch(Dispatchers.Main) {
+                val response: Response<ListTopic> = job.await()
+                println("Done await")
+
+                //todo deshabilitar loading
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }
+                        ?.let {
+                            val topics: ListTopic = response.body()!!
+                            println("La lista de nuevos topics es: " + topics.topic_list.more_topics_url)
+                            val moreTopics = topics.topic_list.more_topics_url ?: ""
+                            _topicManagementState.value = TopicManagementState.LoadMoreTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = moreTopics)
+                        }
+                        ?: run {
+                            //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                        }
+                } else {
+                    //Todo TopicManagementState.RequestErrorReported(requestError = it)
+                }
+                println("Done launch")
+            }
+            println("Done!")
         }
     }
 
