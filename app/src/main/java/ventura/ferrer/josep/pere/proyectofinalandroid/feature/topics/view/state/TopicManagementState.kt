@@ -16,7 +16,7 @@ sealed class TopicManagementState {
     object OnLogOut: TopicManagementState()
     object CreateTopicCompleted : TopicManagementState()
     object Loading : TopicManagementState()
-    class TopicCreatedSuccessfully(val msg: String) : TopicManagementState()
+    class TopicCreatedSuccessfully() : TopicManagementState()
     class RequestErrorReported(val requestError: RequestError) : TopicManagementState()
 
 }

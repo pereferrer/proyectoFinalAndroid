@@ -38,12 +38,11 @@
             _topicManagementState.value = TopicManagementState.GoToPosts(topic =  topic)
         }
 
-        fun onGoToTopics(context: Context?){
+        fun onGoToTopics(){
             _topicManagementState.value = TopicManagementState.OnGoToTopics
-            Toast.makeText(context, "Profile clicked", Toast.LENGTH_SHORT).show()
         }
 
-        fun onGoToLatestNews(context: Context?){
+        fun onGoToLatestNews(){
             _topicManagementState.value = TopicManagementState.OnGoToLatestNews
         }
 
@@ -55,22 +54,22 @@
             _topicManagementState.value = TopicManagementState.NavigateToCreateTopic
         }
 
-        fun onLogOut(context: Context){
+        fun onLogOut(){
             UserRepo.logOut()
             _topicManagementState.value = TopicManagementState.OnLogOut
         }
 
-        fun onRetryButtonClicked(context: Context?) {
+        fun onRetryButtonClicked() {
             _topicManagementState.value = TopicManagementState.Loading
-            fetchTopicsAndHandleResponse(context = context)
+            fetchTopicsAndHandleResponse()
         }
 
-        fun onTopicsFragmentResumed(context: Context?) {
+        fun onTopicsFragmentResumed() {
             _topicManagementState.value = TopicManagementState.Loading
-            fetchTopicsAndHandleResponse(context = context)
+            fetchTopicsAndHandleResponse()
         }
 
-        fun onCreateTopicOptionClicked(context: Context, createTopicModel: CreateTopicModel) {
+        fun onCreateTopicOptionClicked(createTopicModel: CreateTopicModel) {
             if (isFormValid(model = createTopicModel)) {
 
                 val job = async{
@@ -87,8 +86,7 @@
                             ?.let {
                                 val c: CreateTopicModelResponse = response.body()!!
                                 _topicManagementState.value = TopicManagementState.CreateTopicCompleted
-                                TopicManagementState.TopicCreatedSuccessfully(msg = context.getString(
-                                    R.string.message_topic_created))
+                                TopicManagementState.TopicCreatedSuccessfully()
                             }
                             ?: run { _topicManagementState.value = TopicManagementState.CreateTopicCompleted
                                 //Todo TopicManagementState.RequestErrorReported(requestError = it)
@@ -108,7 +106,7 @@
         private fun isFormValid(model: CreateTopicModel) =
             with(model) { title.isNotEmpty() && raw.isNotEmpty() }
 
-        private fun fetchTopicsAndHandleResponse(context: Context?) {
+        private fun fetchTopicsAndHandleResponse() {
                 val job = async {
                     val a = topicsRepo.getTopics()
                     a
@@ -133,7 +131,7 @@
                 }
         }
 
-        fun loadMoreTopics(context:Context?, no_definitions: Boolean, page: Int){
+        fun loadMoreTopics(no_definitions: Boolean, page: Int){
             val job = async {
                 val a = topicsRepo.loadMoreTopics(no_definitions, page)
                 a

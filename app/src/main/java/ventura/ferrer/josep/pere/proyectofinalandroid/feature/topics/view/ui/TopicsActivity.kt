@@ -74,7 +74,7 @@ class TopicsActivity : AppCompatActivity(),
                 is TopicManagementState.LoadTopicList -> loadTopicList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
                 is TopicManagementState.LoadMoreTopicList -> loadMoreTopicsList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
                 is TopicManagementState.GoToPosts -> goToPosts(state.topic)
-                is TopicManagementState.TopicCreatedSuccessfully -> showMessage(msg = state.msg)
+                is TopicManagementState.TopicCreatedSuccessfully -> showMessage()
                 is TopicManagementState.RequestErrorReported -> showRequestError(error = state.requestError)
                 TopicManagementState.OnGoToTopics -> onGoToTopics()
                 TopicManagementState.NavigateToCreateTopic -> navigateToCreateTopic()
@@ -112,11 +112,11 @@ class TopicsActivity : AppCompatActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_topics -> {
-                topicViewModel.onGoToTopics(this)
+                topicViewModel.onGoToTopics()
                 AppTitle.setText(R.string.topics);
             }
             R.id.nav_latest_news -> {
-                topicViewModel.onGoToLatestNews(this)
+                topicViewModel.onGoToLatestNews()
                 AppTitle.setText(R.string.latest_news);
             }
         }
@@ -133,20 +133,20 @@ class TopicsActivity : AppCompatActivity(),
     }
 
     override fun onLogOut() {
-        topicViewModel.onLogOut(this)
+        topicViewModel.onLogOut()
     }
 
     override fun loadMoreTopics(no_definitions: Boolean, page: Int) {
-        topicViewModel.loadMoreTopics(context = this, no_definitions = no_definitions, page = page)
+        topicViewModel.loadMoreTopics(no_definitions = no_definitions, page = page)
     }
 
     override fun onTopicsFragmentResumed() {
         AppTitle.setText(R.string.topics);
-        topicViewModel.onTopicsFragmentResumed(context = this)
+        topicViewModel.onTopicsFragmentResumed()
     }
 
     override fun onRetryButtonClicked() {
-        topicViewModel.onRetryButtonClicked(context = this)
+        topicViewModel.onRetryButtonClicked()
     }
 
     private fun onGoToTopics() {
@@ -167,7 +167,7 @@ class TopicsActivity : AppCompatActivity(),
     }
 
     override fun onCreateTopicOptionClicked(model: CreateTopicModel) {
-        topicViewModel.onCreateTopicOptionClicked(context = this, createTopicModel = model)
+        topicViewModel.onCreateTopicOptionClicked(createTopicModel = model)
     }
 
     private fun goToPosts(topic: Topic) {
@@ -224,7 +224,7 @@ class TopicsActivity : AppCompatActivity(),
         finish()
     }
 
-    private fun showMessage(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+    private fun showMessage() {
+        Toast.makeText(this, R.string.message_topic_created, Toast.LENGTH_LONG).show()
     }
 }
