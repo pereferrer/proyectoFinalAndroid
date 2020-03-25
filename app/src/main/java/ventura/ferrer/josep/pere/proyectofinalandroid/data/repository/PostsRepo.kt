@@ -27,7 +27,6 @@ object PostsRepo : PostsRepository{
     {
 
         val username = UserRepo.getUsername()
-        println("El username es?: " + username)
         val request = UserRequest(
             username,
             Request.Method.GET,
@@ -77,7 +76,6 @@ object PostsRepo : PostsRepository{
     {
 
         val username = UserRepo.getUsername()
-        println("El username es?: " + username)
         val request = UserRequest(
             username,
             Request.Method.GET,
@@ -114,7 +112,6 @@ object PostsRepo : PostsRepository{
                         )
                     )
             })
-        println("cdsadsadads" +request + "dsa" + idTopic + "dcassd" + idPost)
 
         ApiRequestQueue.getRequestQueue(context)
             .add(request)
@@ -123,7 +120,6 @@ object PostsRepo : PostsRepository{
 
     override suspend fun getPostsAcrossTopics(): Response<LatestPostRetrofit> {
         val a =  retroF.create(PostService::class.java).getPostsAcrossTopics()
-        println("He acabat retrofit")
         return a
     }
 

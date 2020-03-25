@@ -105,7 +105,6 @@ class TopicsFragment : Fragment() {
             }
 
             private fun onScrolledToBottom() {
-                println("Estoy en el bottom")
                 loadMoreTopics()
 
             }
@@ -157,7 +156,6 @@ class TopicsFragment : Fragment() {
 
     fun loadMoreTopics(){
         if(loadMoreTopicsUrl != ""){
-            println("Estoy en el loadMoreTopics")
             enableLoading(true)
             val page = loadMoreTopicsUrl.substring(33).toInt()
             val definitions = loadMoreTopicsUrl.substring(27).toBoolean()

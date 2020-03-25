@@ -47,7 +47,6 @@ class LoginFragment : Fragment(){
         }
 
         buttonLoginForgotPassword.setOnClickListener {
-            println("sadadasdsasdaads")
             onRecoverPassword()
         }
     }

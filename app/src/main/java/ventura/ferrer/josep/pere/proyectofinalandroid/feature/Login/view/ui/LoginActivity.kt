@@ -125,7 +125,6 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
     }
 
     private fun goToTopics(){
-        println("lalalala 2")
         if(loginViewModel.isLogged()){
             val intent = Intent(this, TopicsActivity::class.java)
             startActivity(intent)

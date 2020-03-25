@@ -49,11 +49,9 @@ class DetailUserFragment : Fragment(){
     }
 
     fun showData(detailUserResponse: DetailUserResponse){
-        println("sdadadasdadas  "+detailUserResponse.user.email)
     }
 
     fun showData(topics: List<Topic>){
-        println("topics  "+topics.count())
     }
 
     interface DetailUserInteractionListener {

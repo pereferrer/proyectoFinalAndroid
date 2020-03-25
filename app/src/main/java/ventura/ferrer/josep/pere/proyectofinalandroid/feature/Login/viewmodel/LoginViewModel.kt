@@ -35,14 +35,11 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
             saveSession(registerModel.username)
             val job = async{
                 val a = RegisterRepo.registerNewUser(registerModel)
-                println("Done async")
                 a
             }
 
             launch(Dispatchers.Main) {
                 val response: Response<RegisterModelResponse> = job.await()
-                println("Done await")
-
                 //todo deshabilitar loading
                 if (response.isSuccessful) {
                     response.body().takeIf { it != null }
@@ -61,9 +58,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                 } else {
                     _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
-                println("Done launch")
             }
-            println("Done!")
         } else {
             _registerManagementState.value = LoginManagementState.FormErrorReported(context.getString(
                 R.string.sign_up_field_empty))
@@ -77,14 +72,11 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
 
             val job = async{
                 val a = LoginRepo.loginUser(loginModel)
-                println("Done async")
                 a
             }
 
             launch(Dispatchers.Main) {
                 val response: Response<LoginModelResponse> = job.await()
-                println("Done await")
-
                 //todo deshabilitar loading
                 if (response.isSuccessful) {
                     response.body().takeIf { it != null }
@@ -92,8 +84,6 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                             val c: LoginModelResponse = response.body()!!
                             if(c.user != null){
                                 saveSession(c.user.username)
-
-                                println("lalalala 1")
                                 _registerManagementState.value = LoginManagementState.LoginUserCompleted
                                 _registerManagementState.value = LoginManagementState.UserLoggedSuccessfully(msg = context.getString(R.string.user_logged))
                             }else{
@@ -106,9 +96,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                 } else {
                     _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
-                println("Done launch")
             }
-            println("Done!")
         } else {
             _registerManagementState.value = LoginManagementState.FormErrorReported(context.getString(
                 R.string.sign_in_field_empty))
@@ -121,20 +109,17 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
 
             val job = async{
                 val a = LoginRepo.forgotPasswordUser(forgotPassword)
-                println("Done async")
                 a
             }
 
             launch(Dispatchers.Main) {
                 val response: Response<ForgotPasswordResponse> = job.await()
-                println("Done await")
 
                 //todo deshabilitar loading
                 if (response.isSuccessful) {
                     response.body().takeIf { it != null }
                         ?.let {
                             val c: ForgotPasswordResponse = response.body()!!
-                            println("forgot" + c.success)
                             if(c.user_found){
                                 _registerManagementState.value = LoginManagementState.ForgotPasswordUserCompleted
                                 LoginManagementState.RecoverPasswordSuccessfully(msg = context.getString(R.string.recover_password_completed))
@@ -148,9 +133,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                 } else {
                     _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
-                println("Done launch")
             }
-            println("Done!")
         } else {
             _registerManagementState.value = LoginManagementState.FormErrorReported(context.getString(
                             R.string.recover_password_field_empty))
@@ -161,20 +144,17 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
     fun ongetDetailUser(context: Context){
             val job = async{
                 val a = LoginRepo.detailUser(getUserName())
-                println("Done async")
                 a
             }
 
             launch(Dispatchers.Main) {
                 val response: Response<DetailUserResponse> = job.await()
-                println("Done await")
 
                 //todo deshabilitar loading
                 if (response.isSuccessful) {
                     response.body().takeIf { it != null }
                         ?.let {
                             val c: DetailUserResponse = response.body()!!
-                            println("forgot" + c.user.id)
                             if(c.user.id != null){
                                 _registerManagementState.value = LoginManagementState.DetailUserCompleted
                                 _registerManagementState.value = LoginManagementState.DetailUserSuccessfully(c)
@@ -188,28 +168,23 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
                 } else {
                     _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
                 }
-                println("Done launch")
             }
-            println("Done!")
     }
 
     fun getPrivateMessageList(context: Context){
         val job = async{
             val a = LoginRepo.privateMessageListUser(getUserName())
-            println("Done async")
             a
         }
 
         launch(Dispatchers.Main) {
             val response: Response<PrivateMessageListResponse> = job.await()
-            println("Done await")
 
             //todo deshabilitar loading
             if (response.isSuccessful) {
                 response.body().takeIf { it != null }
                     ?.let {
                         val c: PrivateMessageListResponse = response.body()!!
-                        println("forgot" + c.topic_list.topics)
                         if(c.topic_list.topics != null){
                             _registerManagementState.value = LoginManagementState.PrivateMessageListUserCompleted
                             _registerManagementState.value = LoginManagementState.PrivateMessageListSuccessfully(c.topic_list.topics)
@@ -223,9 +198,7 @@ class LoginViewModel @Inject constructor(private val registerRepo: RegisterRepo,
             } else {
                 _registerManagementState.value = LoginManagementState.RequestErrorReported(context.getString(R.string.try_it_again))
             }
-            println("Done launch")
         }
-        println("Done!")
     }
 
 

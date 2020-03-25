@@ -76,7 +76,6 @@ class PostsFragment : Fragment(){
             }
 
             private fun onScrolledToBottom() {
-                println("Estoy en el bottom")
 
 
                 loadNextPosts()
@@ -85,7 +84,6 @@ class PostsFragment : Fragment(){
     }
 
     private fun loadNextPosts() {
-        println("load nex")
         if(currentStream < stream.size){
             enableLoading(true)
             context?.let {
@@ -95,7 +93,6 @@ class PostsFragment : Fragment(){
                         currentPosts.addAll(it)
                         adapter.setPosts(currentPosts)
                         currentStream += 1
-                        println("sasasas" + it[0].cooked)
                     },
                     {
                         enableLoading(false)

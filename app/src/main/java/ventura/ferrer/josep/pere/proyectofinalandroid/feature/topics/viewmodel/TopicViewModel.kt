@@ -75,38 +75,28 @@
 
                 val job = async{
                     val a = TopicsRepo.createTopic(createTopicModel)
-                    println("Done async")
                     a
                 }
 
                 launch(Dispatchers.Main) {
                     val response: Response<CreateTopicModelResponse> = job.await()
-                    println("Done await")
 
                     //todo deshabilitar loading
                     if (response.isSuccessful) {
                         response.body().takeIf { it != null }
                             ?.let {
                                 val c: CreateTopicModelResponse = response.body()!!
-                                println("createtopic" + c.username)
                                 _topicManagementState.value = TopicManagementState.CreateTopicCompleted
                                 TopicManagementState.TopicCreatedSuccessfully(msg = context.getString(
                                     R.string.message_topic_created))
                             }
                             ?: run { _topicManagementState.value = TopicManagementState.CreateTopicCompleted
-                                println("Error 1")
                                 //Todo TopicManagementState.RequestErrorReported(requestError = it)
                                 }
                     } else {
-                        println("Error 2")
-                        println("Error 2" + response.code().toString())
-                        println("Error 2" + response.toString().toString())
-                        println("Error 2" + response.errorBody().toString())
                         //Todo TopicManagementState.RequestErrorReported(requestError = it)
                     }
-                    println("Done launch")
                 }
-                println("Done!")
             } else {
                 //Todo show error
             }
@@ -119,23 +109,19 @@
             with(model) { title.isNotEmpty() && raw.isNotEmpty() }
 
         private fun fetchTopicsAndHandleResponse(context: Context?) {
-                print(context)
                 val job = async {
                     val a = topicsRepo.getTopics()
-                    println("Done async")
                     a
                 }
 
                 launch(Dispatchers.Main) {
                     val response: Response<ListTopic> = job.await()
-                    println("Done await")
 
                     //todo deshabilitar loading
                     if (response.isSuccessful) {
                         response.body().takeIf { it != null }
                             ?.let {
                                 val topics: ListTopic = response.body()!!
-                                println("La lista de topics es: " + topics.topic_list.more_topics_url)
                                 _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url)
                             }
                             ?: run {
@@ -144,31 +130,23 @@
                     } else {
                         //Todo TopicManagementState.RequestErrorReported(requestError = it)
                     }
-                    println("Done launch")
                 }
-                println("Done!")
         }
 
         fun loadMoreTopics(context:Context?, no_definitions: Boolean, page: Int){
-            println("Estoy en loadmoretopics viewModel")
-
-            print(context)
             val job = async {
                 val a = topicsRepo.loadMoreTopics(no_definitions, page)
-                println("Done async")
                 a
             }
 
             launch(Dispatchers.Main) {
                 val response: Response<ListTopic> = job.await()
-                println("Done await")
 
                 //todo deshabilitar loading
                 if (response.isSuccessful) {
                     response.body().takeIf { it != null }
                         ?.let {
                             val topics: ListTopic = response.body()!!
-                            println("La lista de nuevos topics es: " + topics.topic_list.more_topics_url)
                             val moreTopics = topics.topic_list.more_topics_url ?: ""
                             _topicManagementState.value = TopicManagementState.LoadMoreTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = moreTopics)
                         }
@@ -178,9 +156,7 @@
                 } else {
                     //Todo TopicManagementState.RequestErrorReported(requestError = it)
                 }
-                println("Done launch")
             }
-            println("Done!")
         }
     }
 

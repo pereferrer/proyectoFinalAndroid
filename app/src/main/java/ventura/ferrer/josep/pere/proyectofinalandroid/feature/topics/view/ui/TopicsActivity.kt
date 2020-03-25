@@ -87,7 +87,6 @@ class TopicsActivity : AppCompatActivity(),
     }
 
     private fun loadMoreTopicsList(list: List<Topic>, loadMoreTopicsUrl: String) {
-        println("He vuelto a la activity para volver al fragment")
 
         getTopicsFragmentIfAvailableOrNull()?.run {
             enableLoading(enabled = false)
@@ -138,8 +137,6 @@ class TopicsActivity : AppCompatActivity(),
     }
 
     override fun loadMoreTopics(no_definitions: Boolean, page: Int) {
-        println("Estoy en el bottom loadMoreTopics activity")
-
         topicViewModel.loadMoreTopics(context = this, no_definitions = no_definitions, page = page)
     }
 
