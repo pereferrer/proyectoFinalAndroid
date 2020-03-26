@@ -12,10 +12,13 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.*
+import ventura.ferrer.josep.pere.proyectofinalandroid.database.LatestNewEntity
+import ventura.ferrer.josep.pere.proyectofinalandroid.database.LatestNewsDatabase
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
 
 object PostsRepo : PostsRepository{
 
+    lateinit var db: LatestNewsDatabase
     lateinit var ctx: Context
     lateinit var retroF: Retrofit
 
@@ -189,5 +192,29 @@ object PostsRepo : PostsRepository{
             .add(request)
     }
 }
+
+private fun List<LatestNewEntity>.toModel(): List<LatestPost> = map { it.toModel() }
+
+private fun LatestNewEntity.toModel(): LatestPost = LatestPost(
+
+    id = topicId,
+    topic_title = title,
+    topic_slug = slug,
+    post_number = posts,
+    score = score
+)
+
+
+private fun List<LatestPost>.toEntity(): List<LatestNewEntity> = map { it.toEntity() }
+
+private fun LatestPost.toEntity(): LatestNewEntity = LatestNewEntity(
+    topicId = id,
+    title = topic_title,
+    slug = topic_slug,
+    date = created_at.toString(),
+    posts = post_number,
+    score = score
+
+)
 
 

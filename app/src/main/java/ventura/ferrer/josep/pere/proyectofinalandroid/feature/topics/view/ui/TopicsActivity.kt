@@ -25,6 +25,10 @@ import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.ui.Logi
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.posts.EXTRA_TOPIC_ID
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.posts.EXTRA_TOPIC_TITLE
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.posts.PostsActivity
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.latestPosts.view.state.LatestPostManagementState
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.latestPosts.view.ui.LATEST_NEWS_FRAGMENT_TAG
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.latestPosts.view.ui.LatestNewsFragment
+import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.latestPosts.viewmodel.LatestNewsViewModel
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.state.TopicManagementState
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.ui.CreateTopicFragment
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.ui.TOPICS_FRAGMENT_TAG
@@ -35,7 +39,8 @@ import javax.inject.Inject
 const val TRANSACTION_CREATE_TOPIC = "create_topic"
 
 class TopicsActivity : AppCompatActivity(),
-    TopicsFragment.TopicsInteractionListener, CreateTopicFragment.CreateTopicInteractionListener, NavigationView.OnNavigationItemSelectedListener {
+    TopicsFragment.TopicsInteractionListener, CreateTopicFragment.CreateTopicInteractionListener, NavigationView.OnNavigationItemSelectedListener,
+    LatestNewsFragment.LatestNewsInteractionListener {
 
 
     lateinit var toolbar: Toolbar
@@ -43,6 +48,8 @@ class TopicsActivity : AppCompatActivity(),
     lateinit var navView: NavigationView
     @Inject
     lateinit var topicViewModel: TopicViewModel
+    @Inject
+    lateinit var latestNewsViewModel: LatestNewsViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,12 +83,22 @@ class TopicsActivity : AppCompatActivity(),
                 is TopicManagementState.GoToPosts -> goToPosts(state.topic)
                 is TopicManagementState.TopicCreatedSuccessfully -> showMessage()
                 is TopicManagementState.RequestErrorReported -> showRequestError(error = state.requestError)
+                is TopicManagementState.GoToPostsByLatestPost -> goToPostsByLatestPost(state.latestPost)
                 TopicManagementState.OnGoToTopics -> onGoToTopics()
                 TopicManagementState.NavigateToCreateTopic -> navigateToCreateTopic()
                 TopicManagementState.OnLogOut -> exit()
+                TopicManagementState.OnGoToLatestNews -> onGoToLatestNews()
                 TopicManagementState.CreateTopicCompleted -> {
                     onTopicCreated()
                 }
+            }
+        })
+
+        latestNewsViewModel.latestNewsManagementState.observe(this, Observer { state ->
+            when(state){
+                is LatestPostManagementState.RequestErrorReported -> showLatestNewsRequestError(error = state.requestError)
+                is LatestPostManagementState.LoadPostList -> loadpostList(list = state.postList)
+                LatestPostManagementState.Loading -> enableLatestNewsLoadingView()
             }
         })
     }
@@ -110,12 +127,16 @@ class TopicsActivity : AppCompatActivity(),
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        println("onNavigationItemSelected")
+
         when (item.itemId) {
             R.id.nav_topics -> {
                 topicViewModel.onGoToTopics()
                 AppTitle.setText(R.string.topics);
             }
             R.id.nav_latest_news -> {
+                println("nav_latest_news")
+
                 topicViewModel.onGoToLatestNews()
                 AppTitle.setText(R.string.latest_news);
             }
@@ -136,6 +157,10 @@ class TopicsActivity : AppCompatActivity(),
         topicViewModel.onLogOut()
     }
 
+    override fun onPostSelected(latestPost: LatestPost) {
+        topicViewModel.onPostSelected(latestPost)
+    }
+
     override fun loadMoreTopics(no_definitions: Boolean, page: Int) {
         topicViewModel.loadMoreTopics(no_definitions = no_definitions, page = page)
     }
@@ -149,12 +174,28 @@ class TopicsActivity : AppCompatActivity(),
         topicViewModel.onRetryButtonClicked()
     }
 
+    override fun onRetryLatestNewsButtonClicked(){
+        latestNewsViewModel.onRetryButtonClicked(context = this)
+    }
+
     private fun onGoToTopics() {
         AppTitle.setText(R.string.topics);
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer,
                 TopicsFragment(),
                 TOPICS_FRAGMENT_TAG
+            )
+            .addToBackStack(TRANSACTION_CREATE_TOPIC)
+            .commit()
+    }
+
+    private fun onGoToLatestNews(){
+        println("onGoToLatestNews")
+        AppTitle.setText(R.string.latest_news);
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer,
+                LatestNewsFragment(),
+                LATEST_NEWS_FRAGMENT_TAG
             )
             .addToBackStack(TRANSACTION_CREATE_TOPIC)
             .commit()
@@ -189,6 +230,17 @@ class TopicsActivity : AppCompatActivity(),
         }
     }
 
+    private fun getLatestNewsFragmentIfAvailableOrNull(): LatestNewsFragment? {
+        val fragment: Fragment? =
+            supportFragmentManager.findFragmentByTag(LATEST_NEWS_FRAGMENT_TAG)
+
+        return if (fragment != null && fragment.isVisible) {
+            fragment as LatestNewsFragment
+        } else {
+            null
+        }
+    }
+
     private fun enableLoadingView() {
         getTopicsFragmentIfAvailableOrNull()?.enableLoading( true)
     }
@@ -200,12 +252,40 @@ class TopicsActivity : AppCompatActivity(),
         }
     }
 
+    private fun enableLatestNewsLoadingView() {
+        getLatestNewsFragmentIfAvailableOrNull()?.enableLoading( true)
+    }
+
 
     private fun loadTopicList(list: List<Topic>, loadMoreTopicsUrl:String) {
         getTopicsFragmentIfAvailableOrNull()?.run {
             enableLoading(enabled = false)
             loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl)
         }
+    }
+
+    private fun showLatestNewsRequestError(error: RequestError) {
+        getLatestNewsFragmentIfAvailableOrNull()?.run {
+            enableLoading(enabled = false)
+            handleRequestError(requestError = error)
+        }
+    }
+
+    private fun loadpostList(list: List<LatestPost>) {
+        Log.d("loadpostList","loadpostList")
+        getLatestNewsFragmentIfAvailableOrNull()?.run {
+            Log.d("enabled","enabled")
+
+            enableLoading(enabled = false)
+            loadLatestNews(latestNewsList = list)
+        }
+    }
+
+    private fun goToPostsByLatestPost(latestPost: LatestPost) {
+        val intent = Intent(this, PostsActivity::class.java)
+        intent.putExtra(EXTRA_TOPIC_ID, latestPost.id)
+        intent.putExtra(EXTRA_TOPIC_TITLE, latestPost.topic_title)
+        startActivity(intent)
     }
 
     private fun navigateToCreateTopic(){

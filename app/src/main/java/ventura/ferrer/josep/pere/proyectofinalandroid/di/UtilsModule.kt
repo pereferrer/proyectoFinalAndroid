@@ -15,6 +15,7 @@ import ventura.ferrer.josep.pere.proyectofinalandroid.BuildConfig
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.PREFERENCES_SESSION
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.PREFERENCES_SESSION_USERNAME
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.UserRepo
+import ventura.ferrer.josep.pere.proyectofinalandroid.database.LatestNewsDatabase
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -22,11 +23,11 @@ import javax.inject.Singleton
 @Module
 class UtilsModule(private val context: Context) {
 
-    /*@Singleton
+    @Singleton
     @Provides
     fun provideLatestNewsDb(): LatestNewsDatabase = Room.databaseBuilder(
         context, LatestNewsDatabase::class.java, "latestNews-database"
-    ).build()*/
+    ).build()
 
     @Singleton
     @Provides
