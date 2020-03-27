@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import retrofit2.Response
+import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.PostsRepo
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.PostsRepository
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LatestPostRetrofit
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.latestPosts.view.state.LatestPostManagementState
@@ -50,6 +51,7 @@ class LatestNewsViewModel @Inject constructor(private val postRepo: PostsReposit
             if (response.isSuccessful) {
                 response.body().takeIf { it != null }
                     ?.let {
+                        PostsRepo.insertAllLatestNew(it.latest_posts)
                         _latestPostManagementState.value = LatestPostManagementState.LoadPostList(postList = it.latest_posts)
                     }
                     ?: run {

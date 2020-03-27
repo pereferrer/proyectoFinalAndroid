@@ -4,31 +4,61 @@ import android.content.Context
 import retrofit2.Response
 import retrofit2.Retrofit
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.TopicsService
+import ventura.ferrer.josep.pere.proyectofinalandroid.database.EhHoDatabase
+import ventura.ferrer.josep.pere.proyectofinalandroid.database.TopicsNewEntity
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.CreateTopicModel
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.CreateTopicModelResponse
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.ListTopic
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Topic
+import kotlin.concurrent.thread
 
 
 object TopicsRepo: TopicsRepository {
 
+    lateinit var db: EhHoDatabase
     lateinit var ctx: Context
     lateinit var retroF: Retrofit
 
     override suspend fun getTopics(): Response<ListTopic> {
         val a =    retroF.create(TopicsService::class.java).getTopics()
-        println("" + retroF.toString())
         return a
     }
 
     override suspend fun createTopic(createTopicModel: CreateTopicModel): Response<CreateTopicModelResponse> {
         val a =    retroF.create(TopicsService::class.java).loginUserWithCoroutines(createTopicModel)
-        println("" + retroF.toString())
         return a
     }
 
     override suspend fun loadMoreTopics(no_definitions: Boolean, page: Int): Response<ListTopic> {
         val a =    retroF.create(TopicsService::class.java).loadMoreTopicsWithCoroutines(no_definitions, page)
-        println("" + retroF.toString())
         return a
     }
+
+    fun insertTopicsToDB(listTopics: List<Topic>){
+        thread {
+            db.topicsNewDao().insertAll(listTopics.toEntity())
+        }
+
+    }
 }
+
+private fun List<TopicsNewEntity>.toModel(): List<Topic> = map { it.toModel() }
+
+private fun TopicsNewEntity.toModel(): Topic = Topic(
+    id = topicId,
+    title = title,
+    fecha = date,
+    posts = posts,
+    views = views
+)
+
+private fun List<Topic>.toEntity(): List<TopicsNewEntity> = map { it.toEntity() }
+
+private fun Topic.toEntity(): TopicsNewEntity = TopicsNewEntity(
+    topicId = id,
+    title = title,
+    date = fecha,
+    posts = posts,
+    views = views
+)
+

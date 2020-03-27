@@ -13,6 +13,16 @@ data class LatestNewEntity(
     @ColumnInfo(name = "latest_new_score") val score: Double
 )
 
+@Entity(tableName = "Topics")
+data class TopicsNewEntity(
+    @PrimaryKey(autoGenerate = true) val uid: Int = 0,
+    @ColumnInfo(name = "topic_id") val topicId: String,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "posts") val posts: Int,
+    @ColumnInfo(name = "views") val views: Int
+)
+
 @Dao
 interface LatestNewDao {
     @Query("SELECT * FROM LatestNew")
@@ -28,7 +38,23 @@ interface LatestNewDao {
     fun delete(LatestNew: LatestNewEntity)
 }
 
-@Database(entities = [LatestNewEntity::class], version = 3)
-abstract class LatestNewsDatabase : RoomDatabase() {
-    abstract fun latestNewDao(): LatestNewDao
+@Dao
+interface TopicsNewDao {
+    @Query("SELECT * FROM Topics")
+    fun getTopics(): List<TopicsNewEntity>
+
+    @Query("SELECT * FROM Topics WHERE topic_id LIKE :id")
+    fun getTopicById(id: String): TopicsNewEntity
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(TopicsList: List<TopicsNewEntity>): List<Long>
 }
+
+@Database(entities = [LatestNewEntity::class, TopicsNewEntity::class], version = 4)
+abstract class EhHoDatabase : RoomDatabase() {
+    abstract fun latestNewDao(): LatestNewDao
+    abstract  fun topicsNewDao(): TopicsNewDao
+}
+
+
+

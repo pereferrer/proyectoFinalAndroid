@@ -11,6 +11,7 @@
     import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.TopicsRepo
     import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.TopicsRepository
     import ventura.ferrer.josep.pere.proyectofinalandroid.data.repository.UserRepo
+    import ventura.ferrer.josep.pere.proyectofinalandroid.database.TopicsNewEntity
     import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
     import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.state.TopicManagementState
     import javax.inject.Inject
@@ -120,6 +121,7 @@
                         response.body().takeIf { it != null }
                             ?.let {
                                 val topics: ListTopic = response.body()!!
+                                TopicsRepo.insertTopicsToDB(topics.topic_list.topics)
                                 _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url)
                             }
                             ?: run {
@@ -157,4 +159,3 @@
             }
         }
     }
-

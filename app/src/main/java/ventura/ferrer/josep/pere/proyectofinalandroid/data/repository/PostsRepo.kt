@@ -13,12 +13,13 @@ import retrofit2.Retrofit
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.database.LatestNewEntity
-import ventura.ferrer.josep.pere.proyectofinalandroid.database.LatestNewsDatabase
+import ventura.ferrer.josep.pere.proyectofinalandroid.database.EhHoDatabase
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.*
+import kotlin.concurrent.thread
 
 object PostsRepo : PostsRepository{
 
-    lateinit var db: LatestNewsDatabase
+    lateinit var db: EhHoDatabase
     lateinit var ctx: Context
     lateinit var retroF: Retrofit
 
@@ -190,6 +191,12 @@ object PostsRepo : PostsRepository{
 
         ApiRequestQueue.getRequestQueue(context)
             .add(request)
+    }
+
+    fun insertAllLatestNew(listLatestPost: List<LatestPost>){
+        thread {
+            db.latestNewDao().insertAll(listLatestPost.toEntity())
+        }
     }
 }
 
