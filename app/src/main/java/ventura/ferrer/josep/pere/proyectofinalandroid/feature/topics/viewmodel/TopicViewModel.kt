@@ -1,6 +1,9 @@
     package ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.viewmodel
 
     import android.content.Context
+    import android.net.ConnectivityManager
+    import android.net.NetworkCapabilities
+    import android.os.Build
     import android.widget.Toast
     import androidx.lifecycle.LiveData
     import androidx.lifecycle.MutableLiveData
@@ -60,14 +63,14 @@
             _topicManagementState.value = TopicManagementState.OnLogOut
         }
 
-        fun onRetryButtonClicked() {
+        fun onRetryButtonClicked(context: Context) {
             _topicManagementState.value = TopicManagementState.Loading
-            fetchTopicsAndHandleResponse()
+            fetchTopicsAndHandleResponse(context = context)
         }
 
-        fun onTopicsFragmentResumed() {
+        fun onTopicsFragmentResumed(context: Context) {
             _topicManagementState.value = TopicManagementState.Loading
-            fetchTopicsAndHandleResponse()
+            fetchTopicsAndHandleResponse(context)
         }
 
         fun onCreateTopicOptionClicked(createTopicModel: CreateTopicModel) {
@@ -107,31 +110,58 @@
         private fun isFormValid(model: CreateTopicModel) =
             with(model) { title.isNotEmpty() && raw.isNotEmpty() }
 
-        private fun fetchTopicsAndHandleResponse() {
+        private fun fetchTopicsAndHandleResponse(context: Context) {
+            if(isOnline(context = context)){
+                println("is online")
                 val job = async {
                     val a = topicsRepo.getTopics()
                     a
                 }
-
                 launch(Dispatchers.Main) {
                     val response: Response<ListTopic> = job.await()
 
-                    //todo deshabilitar loading
-                    if (response.isSuccessful) {
-                        response.body().takeIf { it != null }
-                            ?.let {
-                                val topics: ListTopic = response.body()!!
-                                TopicsRepo.insertTopicsToDB(topics.topic_list.topics)
-                                _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url)
-                            }
-                            ?: run {
-                                //Todo TopicManagementState.RequestErrorReported(requestError = it)
-                            }
-                    } else {
-                        //Todo TopicManagementState.RequestErrorReported(requestError = it)
-                    }
+
+                        if (response.isSuccessful) {
+                            response.body().takeIf { it != null }
+                                ?.let {
+                                    val topics: ListTopic = response.body()!!
+                                    TopicsRepo.insertTopicsToDB(topics.topic_list.topics)
+                                    _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url)
+                                }
+                                ?: run {
+                                    TopicsRepo.getTopicsFromDB(
+                                        { topicList ->
+                                            _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "")
+
+                                        }, { error ->
+                                            _topicManagementState.value = TopicManagementState.showTopicsErrorMessage(error)
+                                        })
+                                    TopicManagementState.RequestErrorReported(requestError = error("Something went wrong. Try again later"))
+
+                                }
+                        } else {
+                            TopicsRepo.getTopicsFromDB(
+                                { topicList ->
+                                    _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "")
+
+                                }, { error ->
+                                    _topicManagementState.value = TopicManagementState.showTopicsErrorMessage(error)
+                                })
+                            TopicManagementState.RequestErrorReported(requestError = error("Something went wrong. Try again later"))
+                        }
                 }
+
+            }else{
+                TopicsRepo.getTopicsFromDB(
+                    { topicList ->
+                        _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "")
+
+                    }, { error ->
+                        _topicManagementState.value = TopicManagementState.showTopicsErrorMessage(error)
+                    })
+            }
         }
+
 
         fun loadMoreTopics(no_definitions: Boolean, page: Int){
             val job = async {
@@ -156,6 +186,23 @@
                 } else {
                     //Todo TopicManagementState.RequestErrorReported(requestError = it)
                 }
+            }
+        }
+
+        fun isOnline(context: Context): Boolean {
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val n = cm.activeNetwork
+                if (n != null) {
+                    val nc = cm.getNetworkCapabilities(n)
+                    //It will check for both wifi and cellular network
+                    return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                }
+                return false
+            } else {
+                val netInfo = cm.activeNetworkInfo
+                return netInfo != null && netInfo.isConnectedOrConnecting
             }
         }
     }

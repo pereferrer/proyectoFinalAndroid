@@ -197,6 +197,10 @@ class TopicsFragment : Fragment() {
         fun loadMoreTopics(no_definitions: Boolean, page: Int)
     }
 
+    fun showError(errorMsg: String){
+        Snackbar.make(parentLayout, errorMsg, Snackbar.LENGTH_LONG).show()
+
+    }
 }
 
 

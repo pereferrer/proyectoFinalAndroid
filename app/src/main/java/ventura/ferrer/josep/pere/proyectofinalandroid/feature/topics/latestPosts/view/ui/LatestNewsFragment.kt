@@ -123,6 +123,11 @@ class LatestNewsFragment : Fragment(){
         Snackbar.make(parentLayout, message, Snackbar.LENGTH_LONG).show()
     }
 
+    fun showError(errorMsg: String){
+        Snackbar.make(parentLayout, errorMsg, Snackbar.LENGTH_LONG).show()
+
+    }
+
 
     interface LatestNewsInteractionListener {
         fun onLogOut()

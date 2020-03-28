@@ -1,6 +1,9 @@
 package ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.latestPosts.viewmodel
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,39 +32,71 @@ class LatestNewsViewModel @Inject constructor(private val postRepo: PostsReposit
             return _latestPostManagementState
         }
 
-    fun onRetryButtonClicked(context: Context?) {
+    fun onRetryButtonClicked(context: Context) {
         _latestPostManagementState.value = LatestPostManagementState.Loading
         fetchLatestPostsAndHandleResponse(context = context)
     }
 
-    private fun fetchLatestPostsAndHandleResponse(context: Context?) {
-        println("Done entro  fwgsfdgsdf")
-
-        val job = async {
-            val a = postRepo.getPostsAcrossTopics()
-            println("Done async  wgfws")
-            a
-        }
-
-        launch(Dispatchers.Main) {
-            val response: Response<LatestPostRetrofit> = job.await()
-            println("Done await  gfswgaes")
-
-            //todo deshabilitar loading
-            if (response.isSuccessful) {
-                response.body().takeIf { it != null }
-                    ?.let {
-                        PostsRepo.insertAllLatestNew(it.latest_posts)
-                        _latestPostManagementState.value = LatestPostManagementState.LoadPostList(postList = it.latest_posts)
-                    }
-                    ?: run {
-                        //todo _latestPostManagementState.value = LatestPostManagementState.RequestErrorReported(requestError = it)
-                    }
-            } else {
-                //TOdo _latestPostManagementState.value = LatestPostManagementState.RequestErrorReported(requestError = it)
+    private fun fetchLatestPostsAndHandleResponse(context: Context) {
+        if(isOnline(context = context)){
+            val job = async {
+                val a = postRepo.getPostsAcrossTopics()
+                a
             }
-            println("Done launch  greswgsfg")
+
+            launch(Dispatchers.Main) {
+                val response: Response<LatestPostRetrofit> = job.await()
+
+                //todo deshabilitar loading
+                if (response.isSuccessful) {
+                    response.body().takeIf { it != null }
+                        ?.let {
+                            PostsRepo.insertAllLatestNew(it.latest_posts)
+                            _latestPostManagementState.value = LatestPostManagementState.LoadPostList(postList = it.latest_posts)
+                        }
+                        ?: run {
+                            PostsRepo.getLatestNewFromDB(
+                                { latestPost ->
+                                    _latestPostManagementState.value = LatestPostManagementState.LoadPostList(postList = latestPost)
+                                }, { error ->
+                                    _latestPostManagementState.value = LatestPostManagementState.showLatestNewsErrorMessage(error)
+                                })
+                        }
+                } else {
+                    PostsRepo.getLatestNewFromDB(
+                        { latestPost ->
+                            _latestPostManagementState.value = LatestPostManagementState.LoadPostList(postList = latestPost)
+                        }, { error ->
+                            _latestPostManagementState.value = LatestPostManagementState.showLatestNewsErrorMessage(error)
+                        })
+                }
+            }
+        }else{
+            PostsRepo.getLatestNewFromDB(
+                { latestPost ->
+                    _latestPostManagementState.value = LatestPostManagementState.LoadPostList(postList = latestPost)
+                }, { error ->
+                    _latestPostManagementState.value = LatestPostManagementState.showLatestNewsErrorMessage(error)
+                })
         }
-        println("Done!  safdqaw")
+
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val n = cm.activeNetwork
+            if (n != null) {
+                val nc = cm.getNetworkCapabilities(n)
+                //It will check for both wifi and cellular network
+                return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(
+                    NetworkCapabilities.TRANSPORT_WIFI)
+            }
+            return false
+        } else {
+            val netInfo = cm.activeNetworkInfo
+            return netInfo != null && netInfo.isConnectedOrConnecting
+        }
     }
 }

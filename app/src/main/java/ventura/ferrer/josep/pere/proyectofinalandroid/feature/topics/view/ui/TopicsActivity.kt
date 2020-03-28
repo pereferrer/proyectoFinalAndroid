@@ -78,6 +78,7 @@ class TopicsActivity : AppCompatActivity(),
         topicViewModel.topicManagementState.observe(this, Observer { state ->
             when (state) {
                 TopicManagementState.Loading -> enableLoadingView()
+                is TopicManagementState.showTopicsErrorMessage -> showTopicsErrorMessage(error = state.error)
                 is TopicManagementState.LoadTopicList -> loadTopicList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
                 is TopicManagementState.LoadMoreTopicList -> loadMoreTopicsList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
                 is TopicManagementState.GoToPosts -> goToPosts(state.topic)
@@ -97,6 +98,7 @@ class TopicsActivity : AppCompatActivity(),
         latestNewsViewModel.latestNewsManagementState.observe(this, Observer { state ->
             when(state){
                 is LatestPostManagementState.RequestErrorReported -> showLatestNewsRequestError(error = state.requestError)
+                is LatestPostManagementState.showLatestNewsErrorMessage -> showLatestNewsErrorMessage(error = state.error)
                 is LatestPostManagementState.LoadPostList -> loadpostList(list = state.postList)
                 LatestPostManagementState.Loading -> enableLatestNewsLoadingView()
             }
@@ -167,11 +169,11 @@ class TopicsActivity : AppCompatActivity(),
 
     override fun onTopicsFragmentResumed() {
         AppTitle.setText(R.string.topics);
-        topicViewModel.onTopicsFragmentResumed()
+        topicViewModel.onTopicsFragmentResumed(context = applicationContext)
     }
 
     override fun onRetryButtonClicked() {
-        topicViewModel.onRetryButtonClicked()
+        topicViewModel.onRetryButtonClicked(context = applicationContext)
     }
 
     override fun onRetryLatestNewsButtonClicked(){
@@ -271,7 +273,22 @@ class TopicsActivity : AppCompatActivity(),
         }
     }
 
+    private fun showLatestNewsErrorMessage(error: String) {
+        getLatestNewsFragmentIfAvailableOrNull()?.run {
+            enableLoading(enabled = false)
+            showError(errorMsg = error)
+        }
+    }
+
+    private fun showTopicsErrorMessage(error: String) {
+        getTopicsFragmentIfAvailableOrNull()?.run {
+            enableLoading(enabled = false)
+            showError(errorMsg = error)
+        }
+    }
+
     private fun loadpostList(list: List<LatestPost>) {
+        print("sasdsasasad")
         Log.d("loadpostList","loadpostList")
         getLatestNewsFragmentIfAvailableOrNull()?.run {
             Log.d("enabled","enabled")

@@ -1,9 +1,8 @@
 package ventura.ferrer.josep.pere.proyectofinalandroid.data.repository
 
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
+import android.os.Handler
 import com.android.volley.NetworkError
 import com.android.volley.Request
 import com.android.volley.ServerError
@@ -196,6 +195,21 @@ object PostsRepo : PostsRepository{
     fun insertAllLatestNew(listLatestPost: List<LatestPost>){
         thread {
             db.latestNewDao().insertAll(listLatestPost.toEntity())
+        }
+    }
+
+    fun getLatestNewFromDB(onSuccess: (List<LatestPost>) -> Unit, onError:(String)->Unit){
+        val handler = Handler(ctx.mainLooper)
+        thread {
+            val topicList = db.latestNewDao().getLatestNews().toModel()
+            val runnable = Runnable {
+                if (topicList.isNotEmpty()) {
+                    onSuccess(topicList)
+                }else{
+                    onError("No internet Conection and no data to load from local DB")
+                }
+            }
+            handler.post(runnable)
         }
     }
 }

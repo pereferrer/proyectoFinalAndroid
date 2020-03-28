@@ -8,5 +8,7 @@ sealed class LatestPostManagementState {
     object Loading : LatestPostManagementState()
     class LoadPostList(val postList: List<LatestPost>) : LatestPostManagementState()
     class RequestErrorReported(val requestError: RequestError) : LatestPostManagementState()
+    class showLatestNewsErrorMessage(val error: String) : LatestPostManagementState()
+
 
 }

@@ -18,5 +18,5 @@ sealed class TopicManagementState {
     object Loading : TopicManagementState()
     class TopicCreatedSuccessfully() : TopicManagementState()
     class RequestErrorReported(val requestError: RequestError) : TopicManagementState()
-
+    class showTopicsErrorMessage(val error: String) : TopicManagementState()
 }
