@@ -50,9 +50,11 @@ data class LoginModel(
     @Expose
     @SerializedName("password")
     val password: String
-) {
-    override fun toString(): String {
-        return "RegisterModel(login='$login', password='$password')"
+){
+    fun toJson(): JSONObject {
+        return JSONObject()
+            .put("login", login)
+            .put("password", password)
     }
 }
 
@@ -77,7 +79,7 @@ data class User(
     @SerializedName("name")
     val name: String,
     @Expose
-    @SerializedName("avatarTemplate")
+    @SerializedName("avatar_template")
     val avatarTemplate: String,
     @Expose
     @SerializedName("email")
@@ -142,7 +144,9 @@ data class TopicListResponse(
 
 data class ListTopic(
     @SerializedName("topic_list")
-    val topic_list: TopicListResponse
+    val topic_list: TopicListResponse,
+    @SerializedName("users")
+    val users: List<User>
 )
 
 data class CreateTopicModel(
@@ -153,8 +157,10 @@ data class CreateTopicModel(
     @SerializedName("raw")
     val raw: String
 ) {
-    override fun toString(): String {
-        return "CreateTopicModel(title='$title', raw='$raw')"
+    fun toJson(): JSONObject {
+        return JSONObject()
+            .put("title", title)
+            .put("raw", raw)
     }
 }
 
@@ -214,3 +220,13 @@ data class CreatePostToTopicResponse(
     @Expose
     val avatarTemplate: String
 )
+
+data class Poster(
+    @Expose
+    @SerializedName("user_id")
+    val user_id: Int
+) {
+    override fun toString(): String {
+        return "CreatePostToTopicModel(user_id='$user_id')"
+    }
+}

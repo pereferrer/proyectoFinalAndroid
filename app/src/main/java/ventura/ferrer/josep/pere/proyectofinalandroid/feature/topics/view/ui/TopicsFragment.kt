@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.view_retry.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.RequestError
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Topic
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.User
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.adapter.TopicsAdapter
 
 
@@ -34,6 +35,8 @@ class TopicsFragment : Fragment() {
     lateinit var adapter: TopicsAdapter
     var loadMoreTopicsUrl:String = ""
     var currentTopics = mutableListOf<Topic>()
+    var users = mutableListOf<User>()
+    var isSearchActive:Boolean = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -84,10 +87,17 @@ class TopicsFragment : Fragment() {
 
         topics_search.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
+                isSearchActive = false
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText!!.length == 0){
+                    isSearchActive = false
+                }else{
+                    isSearchActive = true
+                }
+
                 adapter.filter.filter(newText)
                 return false
             }
@@ -105,7 +115,9 @@ class TopicsFragment : Fragment() {
             }
 
             private fun onScrolledToBottom() {
-                loadMoreTopics()
+                if(!isSearchActive){
+                    loadMoreTopics()
+                }
 
             }
         })
@@ -140,18 +152,34 @@ class TopicsFragment : Fragment() {
     }
 
 
-    fun loadTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String) {
-        currentTopics.addAll(topicList)
+    fun loadTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String, users:List<User>?) {
         this.loadMoreTopicsUrl = loadMoreTopicsUrl
+        if(users!= null){
+            this.users.addAll(users!!)
+            for ((index, value) in topicList.withIndex()) {
+                println("poster " +users)
+                var user: User = users.filter { s -> s.id == value.posters[0].user_id}.single()
+                value.avatar = "https://mdiscourse.keepcoding.io" + "${user.avatarTemplate.replace("{size}", "120")}"
+                currentTopics.add(value)
+            }
+            adapter.setTopics(topics = currentTopics)
+        }
         enableLoading(false)
-        adapter.setTopics(topics = topicList)
     }
 
     fun loadMoreTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String) {
+        println("He entrat He entrat He entrat He entrat He entrat")
         currentTopics.addAll(topicList)
         this.loadMoreTopicsUrl = loadMoreTopicsUrl
+        if(users!= null){
+            this.users.addAll(users!!)
+        }
         enableLoading(false)
-        adapter.setTopics(topics = topicList)
+        for ((index, value) in currentTopics.withIndex()) {
+            var user: User = users!!.filter { s -> s.id == value.posters[0].user_id}.single()
+            currentTopics[index].avatar = "https://mdiscourse.keepcoding.io" + "${user.avatarTemplate.replace("{size}", "120")}"
+        }
+        adapter.setTopics(topics = currentTopics)
     }
 
     fun loadMoreTopics(){

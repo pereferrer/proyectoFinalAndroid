@@ -126,12 +126,12 @@
                                 ?.let {
                                     val topics: ListTopic = response.body()!!
                                     TopicsRepo.insertTopicsToDB(topics.topic_list.topics)
-                                    _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url)
+                                    _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = topics.topic_list.more_topics_url, users = topics.users)
                                 }
                                 ?: run {
                                     TopicsRepo.getTopicsFromDB(
                                         { topicList ->
-                                            _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "")
+                                            _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "", users = null)
 
                                         }, { error ->
                                             _topicManagementState.value = TopicManagementState.showTopicsErrorMessage(error)
@@ -142,7 +142,7 @@
                         } else {
                             TopicsRepo.getTopicsFromDB(
                                 { topicList ->
-                                    _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "")
+                                    _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "", users = null)
 
                                 }, { error ->
                                     _topicManagementState.value = TopicManagementState.showTopicsErrorMessage(error)
@@ -154,7 +154,7 @@
             }else{
                 TopicsRepo.getTopicsFromDB(
                     { topicList ->
-                        _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "")
+                        _topicManagementState.value = TopicManagementState.LoadTopicList(topicList = topicList, loadMoreTopicsUrl = "", users = null)
 
                     }, { error ->
                         _topicManagementState.value = TopicManagementState.showTopicsErrorMessage(error)
@@ -178,7 +178,7 @@
                         ?.let {
                             val topics: ListTopic = response.body()!!
                             val moreTopics = topics.topic_list.more_topics_url ?: ""
-                            _topicManagementState.value = TopicManagementState.LoadMoreTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = moreTopics)
+                            _topicManagementState.value = TopicManagementState.LoadMoreTopicList(topicList = topics.topic_list.topics, loadMoreTopicsUrl = moreTopics, users = topics.users)
                         }
                         ?: run {
                             //Todo TopicManagementState.RequestErrorReported(requestError = it)

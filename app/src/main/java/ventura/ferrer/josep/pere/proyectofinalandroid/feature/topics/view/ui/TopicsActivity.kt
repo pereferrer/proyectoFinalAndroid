@@ -13,6 +13,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_topics.*
 import kotlinx.android.synthetic.main.content_main.*
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.RequestError
@@ -21,6 +23,7 @@ import ventura.ferrer.josep.pere.proyectofinalandroid.di.UtilsModule
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.CreateTopicModel
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LatestPost
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Topic
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.User
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.Login.view.ui.LoginActivity
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.posts.EXTRA_TOPIC_ID
 import ventura.ferrer.josep.pere.proyectofinalandroid.feature.posts.EXTRA_TOPIC_TITLE
@@ -79,8 +82,11 @@ class TopicsActivity : AppCompatActivity(),
             when (state) {
                 TopicManagementState.Loading -> enableLoadingView()
                 is TopicManagementState.showTopicsErrorMessage -> showTopicsErrorMessage(error = state.error)
-                is TopicManagementState.LoadTopicList -> loadTopicList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
-                is TopicManagementState.LoadMoreTopicList -> loadMoreTopicsList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl)
+                is TopicManagementState.LoadTopicList -> loadTopicList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl,
+                    users = state.users
+                )
+                is TopicManagementState.LoadMoreTopicList -> loadMoreTopicsList(list = state.topicList, loadMoreTopicsUrl = state.loadMoreTopicsUrl,
+                    users = state.users)
                 is TopicManagementState.GoToPosts -> goToPosts(state.topic)
                 is TopicManagementState.TopicCreatedSuccessfully -> showMessage()
                 is TopicManagementState.RequestErrorReported -> showRequestError(error = state.requestError)
@@ -105,11 +111,15 @@ class TopicsActivity : AppCompatActivity(),
         })
     }
 
-    private fun loadMoreTopicsList(list: List<Topic>, loadMoreTopicsUrl: String) {
+    private fun showError(msg: String) {
+        Snackbar.make(drawer_layout, msg, Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun loadMoreTopicsList(list: List<Topic>, loadMoreTopicsUrl: String, users:List<User>?) {
 
         getTopicsFragmentIfAvailableOrNull()?.run {
             enableLoading(enabled = false)
-            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl)
+            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl, users = users)
         }
     }
 
@@ -259,10 +269,10 @@ class TopicsActivity : AppCompatActivity(),
     }
 
 
-    private fun loadTopicList(list: List<Topic>, loadMoreTopicsUrl:String) {
+    private fun loadTopicList(list: List<Topic>, loadMoreTopicsUrl:String, users:List<User>?) {
         getTopicsFragmentIfAvailableOrNull()?.run {
             enableLoading(enabled = false)
-            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl)
+            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl, users = users)
         }
     }
 

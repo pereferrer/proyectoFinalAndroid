@@ -68,7 +68,8 @@ private fun TopicsNewEntity.toModel(): Topic = Topic(
     title = title,
     fecha = date,
     posts = posts,
-    views = views
+    views = views,
+    avatar = null
 )
 
 private fun List<Topic>.toEntity(): List<TopicsNewEntity> = map { it.toEntity() }

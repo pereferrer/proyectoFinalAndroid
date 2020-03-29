@@ -3,13 +3,14 @@ package ventura.ferrer.josep.pere.proyectofinalandroid.feature.topics.view.state
 import ventura.ferrer.josep.pere.proyectofinalandroid.data.service.RequestError
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.LatestPost
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Topic
+import ventura.ferrer.josep.pere.proyectofinalandroid.domain.User
 
 
 sealed class TopicManagementState {
     class GoToPosts(val topic: Topic): TopicManagementState()
     class GoToPostsByLatestPost(val latestPost: LatestPost): TopicManagementState()
-    class LoadTopicList(val topicList: List<Topic>, val loadMoreTopicsUrl:String) : TopicManagementState()
-    class LoadMoreTopicList(val topicList: List<Topic>, val loadMoreTopicsUrl:String) : TopicManagementState()
+    class LoadTopicList(val topicList: List<Topic>, val loadMoreTopicsUrl:String, val users:List<User>?) : TopicManagementState()
+    class LoadMoreTopicList(val topicList: List<Topic>, val loadMoreTopicsUrl:String, val users:List<User>?) : TopicManagementState()
     object OnGoToTopics : TopicManagementState()
     object OnGoToLatestNews : TopicManagementState()
     object NavigateToCreateTopic: TopicManagementState()

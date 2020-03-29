@@ -15,7 +15,11 @@ data class Topic(
     @SerializedName("posts_count")
     val posts: Int = 0,
     @SerializedName("views")
-    val views: Int = 0
+    val views: Int = 0,
+    @SerializedName("posters")
+    val posters: List<Poster> = emptyList(),
+    @SerializedName("avatar")
+    var avatar: String?
 ) {
     companion object {
         const val MINUTES_MILLIS = 1000L * 60
@@ -288,3 +292,4 @@ data class LatestPost(
         )
     }
 }
+
