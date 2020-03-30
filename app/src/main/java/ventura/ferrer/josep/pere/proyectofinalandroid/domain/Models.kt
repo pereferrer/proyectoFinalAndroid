@@ -82,6 +82,8 @@ data class Post(
     val id: String = UUID.randomUUID().toString(),
     @SerializedName("username")
     val username: String,
+    @SerializedName("avatar_template")
+    val avatar_template: String,
     @SerializedName("cooked")
     val cooked: String,
     @SerializedName("date")
@@ -120,10 +122,15 @@ data class Post(
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault())
             val dateFormatted = dateFormat.parse(date) ?: Date()
 
+            var avatar = jsonObject.getString("avatar_template")
+            avatar = "https://mdiscourse.keepcoding.io" + "${avatar.replace("{size}", "120")}"
+
+
 
             return Post(
                 jsonObject.getInt("id").toString(),
                 jsonObject.getString("username"),
+                avatar,
                 jsonObject.getString("cooked"),
                 dateFormatted,
                 stream

@@ -50,9 +50,13 @@ class LoginActivity : AppCompatActivity(), RegisterFragment.RegisterInteractionL
                 is LoginManagementState.DetailUserSuccessfully -> showDetailUser(detailUser = state.detailUser)
                 is LoginManagementState.PrivateMessageListSuccessfully -> showPrivateMessageList(topics = state.topics)
                 is LoginManagementState.UserLoggedSuccessfully -> goToTopics()
-                is LoginManagementState.UserRegistredSuccessfully -> goToTopics()
+                is LoginManagementState.UserRegistredSuccessfully -> showMessage()
             }
         })
+    }
+
+    private fun showMessage() {
+        Snackbar.make(fragmentContainer, "User Created, check your mailbox", Snackbar.LENGTH_LONG).show()
     }
 
     private fun showPrivateMessageList(topics: List<Topic>) {

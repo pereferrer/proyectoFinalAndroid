@@ -119,7 +119,7 @@ class TopicsActivity : AppCompatActivity(),
 
         getTopicsFragmentIfAvailableOrNull()?.run {
             enableLoading(enabled = false)
-            loadTopicList(topicList = list, loadMoreTopicsUrl = loadMoreTopicsUrl, users = users)
+            loadMoreTopicList(list, loadMoreTopicsUrl, users)
         }
     }
 

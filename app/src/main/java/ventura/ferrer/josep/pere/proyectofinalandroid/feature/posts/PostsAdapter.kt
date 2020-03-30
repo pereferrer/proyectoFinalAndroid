@@ -4,7 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.item_post.view.*
+import kotlinx.android.synthetic.main.item_topic.view.*
 import kotlinx.android.synthetic.main.item_topic.view.labelDate
 import ventura.ferrer.josep.pere.proyectofinalandroid.R
 import ventura.ferrer.josep.pere.proyectofinalandroid.domain.Post
@@ -52,6 +55,10 @@ class PostsAdapter(
                 with(itemView) {
                     tag = field
                     field?.let {
+                        Glide.with(this.context)
+                            .load(it!!.avatar_template)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(profileImagePosts);
                         labelAuthor.text = it.username
                         labelPostContent.text = it.cooked
                         setTimeOffset(it.getTimeOffset())

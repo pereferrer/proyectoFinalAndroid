@@ -154,6 +154,7 @@ class TopicsFragment : Fragment() {
 
     fun loadTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String, users:List<User>?) {
         this.loadMoreTopicsUrl = loadMoreTopicsUrl
+        this.currentTopics.clear()
         if(users!= null){
             this.users.addAll(users!!)
             for ((index, value) in topicList.withIndex()) {
@@ -162,23 +163,25 @@ class TopicsFragment : Fragment() {
                 value.avatar = "https://mdiscourse.keepcoding.io" + "${user.avatarTemplate.replace("{size}", "120")}"
                 currentTopics.add(value)
             }
+            println("El tamany de topics es:" + currentTopics.count())
             adapter.setTopics(topics = currentTopics)
         }
         enableLoading(false)
     }
 
-    fun loadMoreTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String) {
+    fun loadMoreTopicList(topicList: List<Topic>, loadMoreTopicsUrl:String, users:List<User>?) {
         println("He entrat He entrat He entrat He entrat He entrat")
-        currentTopics.addAll(topicList)
+
         this.loadMoreTopicsUrl = loadMoreTopicsUrl
         if(users!= null){
             this.users.addAll(users!!)
         }
         enableLoading(false)
-        for ((index, value) in currentTopics.withIndex()) {
+        for ((index, value) in topicList.withIndex()) {
             var user: User = users!!.filter { s -> s.id == value.posters[0].user_id}.single()
-            currentTopics[index].avatar = "https://mdiscourse.keepcoding.io" + "${user.avatarTemplate.replace("{size}", "120")}"
+            topicList[index].avatar = "https://mdiscourse.keepcoding.io" + "${user.avatarTemplate.replace("{size}", "120")}"
         }
+        currentTopics.addAll(topicList)
         adapter.setTopics(topics = currentTopics)
     }
 
